@@ -38,6 +38,26 @@ class ProducerController extends BaseController
             throw new Exception("Could not save this item");
         } 
     }
+    
+    public function actionUpdate($id) {
+        $producer = Producer::find()->where(['id' => $id])->one();
+        
+        $producer->url = Yii::$app->request->getBodyParam('url');
+        $producer->ip = Yii::$app->request->getBodyParam('ip');
+        $producer->port = Yii::$app->request->getBodyParam('port');
+        
+        
+        if($producer->save()){
+            return \Yii::createObject([
+            'class' => 'yii\web\Response',
+            'format' => \yii\web\Response::FORMAT_JSON,
+            'statusCode' => 200,
+            'data' => $producer,
+        ]);
+        } else {
+            throw new Exception("Could not update this item");
+        }
+    }
 
     public function actionAttributes(){
         $producer = new Producer();
