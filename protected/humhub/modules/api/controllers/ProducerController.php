@@ -27,14 +27,20 @@ class ProducerController extends BaseController
     public function actionCreate() {
         $producer = new Producer();
         
-        if(!Yii::$app->request->getBodyParam('url')){
-            throw new \yii\web\BadRequestHttpException('url is required');
+        $producer->url = Yii::$app->request->getBodyParam('url');
+        $producer->ip = Yii::$app->request->getBodyParam('ip');
+        $producer->port = Yii::$app->request->getBodyParam('port');
+        $producer->active = false;
+        
+        if($producer->save()){
+            return $producer;
         } else {
-            return "hora do show";
-        }
+            throw new Exception("Could not save this item");
+        } 
     }
 
-    public function actionGet(){
-        return "banana";
+    public function actionAttributes(){
+        $producer = new Producer();
+        return $producer->attributes();
     }
 }
