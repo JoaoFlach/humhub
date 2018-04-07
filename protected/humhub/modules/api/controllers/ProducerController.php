@@ -48,12 +48,7 @@ class ProducerController extends BaseController
         
         
         if($producer->save()){
-            return \Yii::createObject([
-            'class' => 'yii\web\Response',
-            'format' => \yii\web\Response::FORMAT_JSON,
-            'statusCode' => 200,
-            'data' => $producer,
-        ]);
+            return $producer;
         } else {
             throw new Exception("Could not update this item");
         }
