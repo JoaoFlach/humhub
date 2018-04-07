@@ -58,6 +58,12 @@ class ProducerController extends BaseController
             throw new Exception("Could not update this item");
         }
     }
+    
+    public function actionView($id) {
+        $producer = Producer::find()->where(['id' => $id])->one();
+        
+        return $producer;
+    }
 
     public function actionAttributes(){
         $producer = new Producer();
