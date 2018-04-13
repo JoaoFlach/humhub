@@ -1,0 +1,11 @@
+{
+    "id": "producer",
+    "name": "Producer",
+    "description": "Connect IOT consumerts to data producers. Share a producer with the community",
+    "keywords": ["iot", "producer", "consumer"],
+    "version": "0.0.1",
+    "humhub": {
+        "minVersion": "1.2.4"
+    },
+    "screenshots": ["assets/screen1.jpg"]
+}
