@@ -32,7 +32,7 @@ class Events extends \yii\base\Object
 
         $event->sender->addItem(array(
             'label' => Yii::t('base', 'Producers'),
-            'url' => Url::to(['/producer/producer/list']),
+            'url' => Url::to(['/producer/index']),
             'icon' => '<i class="fa fa-cloud"></i>',
             'isActive' => (Yii::$app->controller->module && Yii::$app->controller->module->id == 'producer'),
             'sortOrder' => 300,

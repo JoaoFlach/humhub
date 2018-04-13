@@ -2,9 +2,13 @@
 
 namespace humhub\modules\producer\controllers;
 
-use Yii;
-use humhub\modules\producer\models\Producer;
+use humhub\components\behaviors\AccessControl;
+use humhub\modules\directory\components\UserPostsStreamAction;
 use humhub\components\Controller;
+use yii\data\Pagination;
+
+use Yii;
+
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -18,80 +22,90 @@ use humhub\components\Controller;
  * @author Flach
  */
 class ProducerController extends Controller {
-    
-    public function init()
-    {
-        $this->appendPageTitle(Yii::t('DashboardModule.base', 'Dashboard'));
+
+    public function init() {
         return parent::init();
     }
 
-    public $modelClass = 'humhub\modules\producer\models\Producer';
+    /**
+     * @inheritdoc
+     */
+    public function behaviors() {
+        return [
+            'acl' => [
+                'class' => AccessControl::className(),
+                'guestAllowedActions' => ['groups', 'index', 'members', 'spaces', 'user-posts', 'stream']
+            ]
+        ];
+    }
 
     public function actions() {
-        $actions = parent::actions();
-        unset($actions['index'], $actions['view'], $actions['delete'], $actions['update'], $actions['create']);
-        return $actions;
+        return [
+            'stream' => [
+                'class' => UserPostsStreamAction::className(),
+                'mode' => UserPostsStreamAction::MODE_NORMAL,
+            ],
+        ];
     }
 
     public function actionIndex() {
-        $query = Producer::find();
-        return $query->all();
-    }
-
-    public function actionCreate() {
-        $producer = new Producer();
-
-        $producer->url = Yii::$app->request->getBodyParam('url');
-        $producer->ip = Yii::$app->request->getBodyParam('ip');
-        $producer->port = Yii::$app->request->getBodyParam('port');
-        $producer->active = false;
-
-        if ($producer->save()) {
-            return $producer;
-        } else {
-            throw new Exception("Could not save this item");
-        }
-    }
-
-    public function actionUpdate($id) {
-        $producer = Producer::find()->where(['id' => $id])->one();
-
-        $producer->url = Yii::$app->request->getBodyParam('url');
-        $producer->ip = Yii::$app->request->getBodyParam('ip');
-        $producer->port = Yii::$app->request->getBodyParam('port');
-
-
-        if ($producer->save()) {
-            return $producer;
-        } else {
-            throw new Exception("Could not update this item");
-        }
-    }
-
-    public function actionView($id) {
-        $producer = Producer::find()->where(['id' => $id])->one();
-
-        return $producer;
-    }
-
-    public function actionAttributes() {
-        $producer = new Producer();
-        return $producer->attributes();
-    }
-
-    public function actionRequest($id) {
-        $producer = Producer::find()->where(['id' => $id])->one();
-        $url = $producer->url;
-
-        $client = new Client();
-        $client->setUri($url);
-        $response = $client->send();
-        $responsebody = $response->getBody();
-        return $responsebody;
+        return $this->redirect(['test']);
     }
     
-    public function actionList(){
-        return $this->render("index",[]);
-    }
+    public function actionMembers()
+    {
+        $keyword = Yii::$app->request->get('keyword', '');
+        $page = (int) Yii::$app->request->get('page', 1);
+        $groupId = (int) Yii::$app->request->get('groupId', '');
 
+        $group = null;
+        if ($groupId) {
+            $group = Group::findOne(['id' => $groupId, 'show_at_directory' => 1]);
+        }
+
+        $searchOptions = [
+            'model' => User::className(),
+            'page' => $page,
+            'pageSize' => $this->module->pageSize,
+        ];
+
+        if ($this->module->memberListSortField != '') {
+            $searchOptions['sortField'] = $this->module->memberListSortField;
+        }
+
+        if ($group !== null) {
+            $searchOptions['filters'] = ['groups' => $group->id];
+        }
+
+        $searchResultSet = Yii::$app->search->find($keyword, $searchOptions);
+
+        $pagination = new Pagination([
+                    'totalCount' => $searchResultSet->total,
+                    'pageSize' => $searchResultSet->pageSize
+        ]);
+
+        Event::on(Sidebar::className(), Sidebar::EVENT_INIT, function ($event) {
+            $event->sender->addWidget(NewMembers::className(), [], ['sortOrder' => 10]);
+            $event->sender->addWidget(MemberStatistics::className(), [], ['sortOrder' => 20]);
+        });
+
+        return $this->render('members', [
+                    'keyword' => $keyword,
+                    'group' => $group,
+                    'users' => $searchResultSet->getResultInstances(),
+                    'pagination' => $pagination
+        ]);
+    }
+    
+    public function actionTest() {
+        $pagination = new Pagination([
+                    'totalCount' => 3,
+                    'pageSize' => 3
+        ]);
+        
+        return $this->render('test', [
+                    'producers' => [],
+                    'pagination' => $pagination
+        ]);
+    }
 }
