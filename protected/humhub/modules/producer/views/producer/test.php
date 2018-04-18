@@ -1,7 +1,6 @@
 <?php
 use yii\helpers\Html;
-use humhub\modules\user\widgets\Image;
-use humhub\modules\directory\widgets\MemberActionsButton;
+
 ?>
 <div class="panel panel-default">
 
@@ -18,8 +17,8 @@ use humhub\modules\directory\widgets\MemberActionsButton;
             <div class="col-md-6">
                 <div class="form-group form-group-search">
                     <?= Html::hiddenInput('page', '1'); ?>
-                    <?= Html::textInput("keyword", null, ['class' => 'form-control form-search', 'placeholder' => Yii::t('DirectoryModule.base', 'search for members')]); ?>
-                    <?= Html::submitButton(Yii::t('DirectoryModule.base', 'Search'), ['class' => 'btn btn-default btn-sm form-button-search']); ?>
+                    <?= Html::textInput("keyword", null, ['class' => 'form-control form-search', 'placeholder' => Yii::t('ProducerModule.base', 'search for producers')]); ?>
+                    <?= Html::submitButton(Yii::t('ProducerModule.base', 'Search'), ['class' => 'btn btn-default btn-sm form-button-search']); ?>
                 </div>
             </div>
             <div class="col-md-3"></div>
@@ -36,18 +35,8 @@ use humhub\modules\directory\widgets\MemberActionsButton;
     <ul class="media-list">
         <?php foreach ($producers as $producer) : ?>
             <li>
-                <div class="media">
-                    <div class="pull-right memberActions">
-                        <?= MemberActionsButton::widget(['producer' => $producer]); ?>
-                    </div>
-
-                    <?= Image::widget(['producer' => $user, 'htmlOptions' => ['class' => 'pull-left']]); ?>
-                    <div class="media-body">
-                        <h4 class="media-heading">
-                            <a href="<?= $producer->getUrl(); ?>"><?= Html::encode($producer->displayName); ?></a>                            
-                        </h4>
-                        <h5><?= Html::encode($producer->title); ?></h5>
-                    </div>
+                <div>
+                    <p>Producer: <?= $producer->url ?></p> 
                 </div>
             </li>
         <?php endforeach; ?>

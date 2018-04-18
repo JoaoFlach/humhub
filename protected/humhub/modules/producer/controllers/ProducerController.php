@@ -4,8 +4,10 @@ namespace humhub\modules\producer\controllers;
 
 use humhub\components\behaviors\AccessControl;
 use humhub\modules\directory\components\UserPostsStreamAction;
-use humhub\components\Controller;
+use humhub\modules\producer\components\Controller;
+use humhub\modules\producer\models\Producer;
 use yii\data\Pagination;
+
 
 use Yii;
 
@@ -98,13 +100,20 @@ class ProducerController extends Controller {
     }
     
     public function actionTest() {
+        $keyword = Yii::$app->request->get('keyword', '');
+        $page = (int) Yii::$app->request->get('page', 1);
+        $groupId = (int) Yii::$app->request->get('groupId', '');
+        
+        $query = Producer::find();
+        $producers = $query->all();
+        
         $pagination = new Pagination([
                     'totalCount' => 3,
                     'pageSize' => 3
         ]);
         
         return $this->render('test', [
-                    'producers' => [],
+                    'producers' => $producers,
                     'pagination' => $pagination
         ]);
     }
