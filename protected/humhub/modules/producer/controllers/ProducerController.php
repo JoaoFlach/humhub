@@ -4,7 +4,7 @@ namespace humhub\modules\producer\controllers;
 
 use humhub\components\behaviors\AccessControl;
 use humhub\modules\directory\components\UserPostsStreamAction;
-use humhub\modules\producer\components\Controller;
+use yii\rest\ActiveController;
 use humhub\modules\producer\models\Producer;
 use yii\data\Pagination;
 
@@ -23,8 +23,9 @@ use Yii;
  *
  * @author Flach
  */
-class ProducerController extends Controller {
-
+class ProducerController extends ActiveController {
+    public $modelClass = 'humhub\modules\producer\models\Producer';
+    
     public function init() {
         return parent::init();
     }
@@ -51,58 +52,17 @@ class ProducerController extends Controller {
     }
 
     public function actionIndex() {
-        return $this->redirect(['test']);
+        return $this->redirect(['list']);
     }
     
-    public function actionMembers()
-    {
+    public function actionList() {
         $keyword = Yii::$app->request->get('keyword', '');
         $page = (int) Yii::$app->request->get('page', 1);
         $groupId = (int) Yii::$app->request->get('groupId', '');
-
-        $group = null;
-        if ($groupId) {
-            $group = Group::findOne(['id' => $groupId, 'show_at_directory' => 1]);
-        }
-
+        
         $searchOptions = [
-            'model' => User::className(),
-            'page' => $page,
-            'pageSize' => $this->module->pageSize,
+            'model' => Producer::className()
         ];
-
-        if ($this->module->memberListSortField != '') {
-            $searchOptions['sortField'] = $this->module->memberListSortField;
-        }
-
-        if ($group !== null) {
-            $searchOptions['filters'] = ['groups' => $group->id];
-        }
-
-        $searchResultSet = Yii::$app->search->find($keyword, $searchOptions);
-
-        $pagination = new Pagination([
-                    'totalCount' => $searchResultSet->total,
-                    'pageSize' => $searchResultSet->pageSize
-        ]);
-
-        Event::on(Sidebar::className(), Sidebar::EVENT_INIT, function ($event) {
-            $event->sender->addWidget(NewMembers::className(), [], ['sortOrder' => 10]);
-            $event->sender->addWidget(MemberStatistics::className(), [], ['sortOrder' => 20]);
-        });
-
-        return $this->render('members', [
-                    'keyword' => $keyword,
-                    'group' => $group,
-                    'users' => $searchResultSet->getResultInstances(),
-                    'pagination' => $pagination
-        ]);
-    }
-    
-    public function actionTest() {
-        $keyword = Yii::$app->request->get('keyword', '');
-        $page = (int) Yii::$app->request->get('page', 1);
-        $groupId = (int) Yii::$app->request->get('groupId', '');
         
         $query = Producer::find();
         $producers = $query->all();
@@ -112,9 +72,93 @@ class ProducerController extends Controller {
                     'pageSize' => 3
         ]);
         
-        return $this->render('test', [
+        return $this->render('list', [
                     'producers' => $producers,
                     'pagination' => $pagination
         ]);
     }
+    
+   public function actionCreate() {
+        $producer = new Producer();
+        $guid = substr(com_create_guid(),1,-1);
+
+        $producer->internet_address = Yii::$app->request->getBodyParam('internet_address');
+        $producer->guid = $guid;
+        $producer->name = Yii::$app->request->getBodyParam('name');        
+        $producer->tags = Yii::$app->request->getBodyParam('tags');        
+        $currentDate = $this->getCurrentDate();
+        $producer->created_at = $currentDate;
+        $producer->updated_at = $currentDate;
+        $producer->user_id = Yii::$app->user->id;
+        $producer->country = Yii::$app->request->getBodyParam('country');
+        $producer->location= Yii::$app->request->getBodyParam('location');
+        
+        if ($producer->save()) {
+            return 'success';
+        } else {
+            throw new Exception("Could not save this item");
+        }
+    }
+
+    public function actionUpdate($id) {
+        $producer = Producer::find()->where(['id' => $id])->one();
+
+        $producer->internet_address = Yii::$app->request->getBodyParam('internet_address');
+        $producer->name = Yii::$app->request->getBodyParam('name');        
+        $producer->tags = Yii::$app->request->getBodyParam('tags');
+        $producer->country = Yii::$app->request->getBodyParam('country');
+        $producer->location->request->getBodyParam('location');
+        $producer->updated_at = Yii::$app->request->getBodyParam('updated_at');
+
+        if ($producer->save()) {
+            return $producer;
+        } else {
+            throw new Exception("Could not update this item");
+        }
+    }
+
+    public function actionView($id) {
+        $producer = Producer::find()->where(['id' => $id])->one();
+
+        return $this->render('profile', ['producer' => $producer]);
+    }
+
+    public function actionAttributes() {
+        $producer = new Producer();
+        return $producer->attributes();
+    }
+
+    public function actionRequest($id) {
+        $producer = Producer::find()->where(['id' => $id])->one();
+        $url = $producer->url;
+
+        $client = new Client();
+        $client->setUri($url);
+        $response = $client->send();
+        $responsebody = $response->getBody();
+        return $responsebody;
+    }
+    
+    public function actionGuid () {
+        $guid = substr(com_create_guid(),1,-1);
+        
+        return $guid;
+    }
+    
+    private function getCurrentDate () {
+        $format ='Y-m-d H:i:s';
+        $date = gmdate($format);
+        
+        return $date;
+    }
+    
+    public function actionUser(){
+        $user = Yii::$app->user->getIdentity()->getId();
+        return $user;
+    }
+    
+    public function actionNew(){
+        return $this->render('create');
+    }
+    
 }

@@ -5,12 +5,17 @@ use Yii;
 
 /**
  * This is the model class for table "producer".
- *
- * @property integer $id
- * @property string $ip
- * @property string $port
- * @property string $url
- * @property boolean $active
+
+ * @property integer$id
+ * @property string $guid
+ * @property string $name
+ * @property string $tags
+ * @property string $internet_address
+ * @property string $created_at
+ * @property string $created_by (FK user id)
+ * @property string $updated_at
+ * @property string $country
+ * @property string $location
  */
 class Producer extends \yii\db\ActiveRecord 
 {
@@ -28,10 +33,7 @@ class Producer extends \yii\db\ActiveRecord
     public function rules()
     {
         return [            
-            [['active'], 'boolean'],
-            [['ip'], 'string', 'max' => 16],
-            [['url'], 'string', 'max' => 255],
-            [['port'], 'string', 'max' => 5]
+            
         ];
     }
 
@@ -42,10 +44,8 @@ class Producer extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'ip' => 'IP address',
-            'port' => 'Port',
-            'url' => 'URL',
-            'active' => 'Active',
+            'guid' => 'GUID',
+            'Internet_Address' => 'Internet Address',
         ];
     }
 }

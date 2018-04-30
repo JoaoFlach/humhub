@@ -11,6 +11,7 @@ return [
     ],
     'urlManagerRules' => [
         'producer/index' => 'producer/producer/index',
+        'producer/create' => 'producer/producer/create',
     ]   
 ];
 ?>
