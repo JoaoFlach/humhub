@@ -5,6 +5,7 @@ namespace humhub\modules\producer\controllers;
 use humhub\components\behaviors\AccessControl;
 use humhub\modules\directory\components\UserPostsStreamAction;
 use yii\rest\ActiveController;
+use humhub\modules\producer\components\Controller;
 use humhub\modules\producer\models\Producer;
 use yii\data\Pagination;
 
@@ -23,7 +24,7 @@ use Yii;
  *
  * @author Flach
  */
-class ProducerController extends ActiveController {
+class ProducerController extends Controller {
     public $modelClass = 'humhub\modules\producer\models\Producer';
     
     public function init() {

@@ -1,7 +1,7 @@
 <?php
 
-use humhub\modules\directory\widgets\Menu;
-use humhub\modules\directory\widgets\Sidebar;
+use humhub\modules\producer\widgets\Menu;
+use humhub\modules\producer\widgets\Sidebar;
 
 \humhub\assets\JqueryKnobAsset::register($this);
 ?>
