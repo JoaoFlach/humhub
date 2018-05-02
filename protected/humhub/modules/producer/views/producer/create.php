@@ -9,7 +9,7 @@
 <div>
     <p>Create a producer</p>
     
-    <form action="/humhub/producer/create" method="post">
+    <form action="/humhub/producer/rest/create" method="post">
         <div class="form-group">
             <label class="control-label">Name</label>
             <input type="text" name="name" class="form-control"/>

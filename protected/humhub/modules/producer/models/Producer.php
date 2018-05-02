@@ -6,7 +6,7 @@ use Yii;
 /**
  * This is the model class for table "producer".
 
- * @property integer$id
+ * @property integer $id
  * @property string $guid
  * @property string $name
  * @property string $tags
@@ -47,5 +47,9 @@ class Producer extends \yii\db\ActiveRecord
             'guid' => 'GUID',
             'Internet_Address' => 'Internet Address',
         ];
+    }
+    
+    public function getUrl(){
+        return "/humhub/producer/profile/".$this->id;
     }
 }

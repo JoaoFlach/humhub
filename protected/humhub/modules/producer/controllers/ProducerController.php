@@ -4,7 +4,6 @@ namespace humhub\modules\producer\controllers;
 
 use humhub\components\behaviors\AccessControl;
 use humhub\modules\directory\components\UserPostsStreamAction;
-use yii\rest\ActiveController;
 use humhub\modules\producer\components\Controller;
 use humhub\modules\producer\models\Producer;
 use yii\data\Pagination;
@@ -79,46 +78,11 @@ class ProducerController extends Controller {
         ]);
     }
     
-   public function actionCreate() {
-        $producer = new Producer();
-        $guid = substr(com_create_guid(),1,-1);
-
-        $producer->internet_address = Yii::$app->request->getBodyParam('internet_address');
-        $producer->guid = $guid;
-        $producer->name = Yii::$app->request->getBodyParam('name');        
-        $producer->tags = Yii::$app->request->getBodyParam('tags');        
-        $currentDate = $this->getCurrentDate();
-        $producer->created_at = $currentDate;
-        $producer->updated_at = $currentDate;
-        $producer->user_id = Yii::$app->user->id;
-        $producer->country = Yii::$app->request->getBodyParam('country');
-        $producer->location= Yii::$app->request->getBodyParam('location');
+    public function actionCreate(){
+        return $this->render('create');
+    }
         
-        if ($producer->save()) {
-            return 'success';
-        } else {
-            throw new Exception("Could not save this item");
-        }
-    }
-
-    public function actionUpdate($id) {
-        $producer = Producer::find()->where(['id' => $id])->one();
-
-        $producer->internet_address = Yii::$app->request->getBodyParam('internet_address');
-        $producer->name = Yii::$app->request->getBodyParam('name');        
-        $producer->tags = Yii::$app->request->getBodyParam('tags');
-        $producer->country = Yii::$app->request->getBodyParam('country');
-        $producer->location->request->getBodyParam('location');
-        $producer->updated_at = Yii::$app->request->getBodyParam('updated_at');
-
-        if ($producer->save()) {
-            return $producer;
-        } else {
-            throw new Exception("Could not update this item");
-        }
-    }
-
-    public function actionView($id) {
+    public function actionProfile($id) {
         $producer = Producer::find()->where(['id' => $id])->one();
 
         return $this->render('profile', ['producer' => $producer]);
@@ -129,37 +93,14 @@ class ProducerController extends Controller {
         return $producer->attributes();
     }
 
-    public function actionRequest($id) {
-        $producer = Producer::find()->where(['id' => $id])->one();
-        $url = $producer->url;
-
-        $client = new Client();
-        $client->setUri($url);
-        $response = $client->send();
-        $responsebody = $response->getBody();
-        return $responsebody;
-    }
-    
     public function actionGuid () {
         $guid = substr(com_create_guid(),1,-1);
         
         return $guid;
     }
     
-    private function getCurrentDate () {
-        $format ='Y-m-d H:i:s';
-        $date = gmdate($format);
-        
-        return $date;
-    }
-    
     public function actionUser(){
         $user = Yii::$app->user->getIdentity()->getId();
         return $user;
     }
-    
-    public function actionNew(){
-        return $this->render('create');
-    }
-    
 }

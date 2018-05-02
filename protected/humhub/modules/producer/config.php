@@ -10,8 +10,11 @@ return [
         ['class' => TopMenu::className(), 'event' => TopMenu::EVENT_INIT, 'callback' => ['humhub\modules\producer\Events', 'onTopMenuInit']],
     ],
     'urlManagerRules' => [
+        'producer' => 'producer/producer/index',
         'producer/index' => 'producer/producer/index',
         'producer/create' => 'producer/producer/create',
+        'producer/list' => 'producer/producer/list',
+        'GET producer/profile/<id:\d+>' => 'producer/producer/profile',
     ]   
 ];
 ?>

@@ -11,8 +11,6 @@ namespace humhub\modules\producer\widgets;
 use Yii;
 use yii\helpers\Url;
 
-use humhub\modules\directory\models\User;
-
 /**
  * Directory Menu
  *
@@ -27,48 +25,21 @@ class Menu extends \humhub\widgets\BaseMenu
     public function init()
     {
         $this->addItemGroup(array(
-            'id' => 'directory',
-            'label' => Yii::t('DirectoryModule.base', '<strong>Directory</strong> menu'),
+            'id' => 'producer',
+            'label' => Yii::t('ProducerModule.base', '<strong>Producer</strong> menu'),
             'sortOrder' => 100,
         ));
 
-        if (Yii::$app->getModule('directory')->isGroupListingEnabled()) {
-            $this->addItem(array(
-                'label' => Yii::t('DirectoryModule.base', 'Groups'),
-                'group' => 'directory',
-                'url' => Url::to(['/directory/directory/groups']),
-                'sortOrder' => 100,
-                'isActive' => (Yii::$app->controller->action->id == "groups"),
-            ));
-        }
-
         $this->addItem(array(
-            'label' => Yii::t('DirectoryModule.base', 'Members'),
-            'group' => 'directory',
-            'url' => Url::to(['/directory/directory/members']),
+            'label' => Yii::t('ProducerModule.base', 'Create new producer'),
+            'group' => 'producer',
+            'url' => Url::to(['/producer/create']),
             'sortOrder' => 200,
-            'isActive' => (Yii::$app->controller->action->id == "members"),
+            'isActive' => (Yii::$app->controller->action->id == "create"),
         ));
 
-        $this->addItem(array(
-            'label' => Yii::t('DirectoryModule.base', 'Spaces'),
-            'group' => 'directory',
-            'url' => Url::to(['/directory/directory/spaces']),
-            'sortOrder' => 300,
-            'isActive' => (Yii::$app->controller->action->id == "spaces"),
-        ));
-
-        $this->addItem(array(
-            'label' => Yii::t('DirectoryModule.base', 'User profile posts'),
-            'group' => 'directory',
-            'url' => Url::to(['/directory/directory/user-posts']),
-            'sortOrder' => 400,
-            'isActive' => (Yii::$app->controller->action->id == "user-posts"),
-        ));
-
+        
         parent::init();
     }
 
 }
-
-?>

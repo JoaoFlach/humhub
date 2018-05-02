@@ -35,16 +35,20 @@ use yii\helpers\Html;
     <ul class="media-list">
         <?php foreach ($producers as $producer) : ?>
             <li>
-                <div>
-                    <p>Name: <?= $producer->name ?></p
-                    <p>Guid: <?= $producer->guid ?></p>
-                    <p>Internet Address: <?= $producer->internet_address ?></p>
-                    <p>Country: <?= $producer->country ?></p>
-                    <p>Tags: <?= $producer->tags ?></p>
-                    <p>Created at: <?= $producer->created_at ?></p>
-                    <p>Created by: <?= $producer->user_id ?></p>
-                </div>
-            </li>
+                <div class="media">
+                    <div class="media-body">
+                        <h4 class="media-heading">
+                            <a href="<?= $producer->getUrl(); ?>"><?= Html::encode($producer->name); ?></a>
+                        </h4>
+                        <p>Guid: <?= $producer->guid ?></p>
+                        <p>Internet Address: <?= $producer->internet_address ?></p>
+                        <p>Country: <?= $producer->country ?></p>
+                        <p>Tags: <?= $producer->tags ?></p>
+                        <p>Created at: <?= $producer->created_at ?></p>
+                        <p>Created by: <?= $producer->user_id ?></p>
+                    </div>
+                </div>                
+            </li>        
         <?php endforeach; ?>
     </ul>
 
