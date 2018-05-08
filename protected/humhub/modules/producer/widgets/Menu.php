@@ -29,12 +29,20 @@ class Menu extends \humhub\widgets\BaseMenu
             'label' => Yii::t('ProducerModule.base', '<strong>Producer</strong> menu'),
             'sortOrder' => 100,
         ));
-
+        
+        $this->addItem(array(
+            'label' => Yii::t('ProducerModule.base', 'View producers list'),
+            'group' => 'producer',
+            'url' => Url::to(['/producer/list']),
+            'sortOrder' => 200,
+            'isActive' => (Yii::$app->controller->action->id == "create"),
+        ));
+        
         $this->addItem(array(
             'label' => Yii::t('ProducerModule.base', 'Create new producer'),
             'group' => 'producer',
             'url' => Url::to(['/producer/create']),
-            'sortOrder' => 200,
+            'sortOrder' => 300,
             'isActive' => (Yii::$app->controller->action->id == "create"),
         ));
 

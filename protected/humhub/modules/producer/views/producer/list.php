@@ -1,5 +1,6 @@
 <?php
 use yii\helpers\Html;
+use humhub\modules\producer\widgets\Image;
 
 ?>
 <div class="panel panel-default">
@@ -36,10 +37,14 @@ use yii\helpers\Html;
         <?php foreach ($producers as $producer) : ?>
             <li>
                 <div class="media">
+                    <?= Image::widget(['producer' => $producer, 'htmlOptions' => ['class' => 'pull-left']]); ?>
                     <div class="media-body">
                         <h4 class="media-heading">
                             <a href="<?= $producer->getUrl(); ?>"><?= Html::encode($producer->name); ?></a>
                         </h4>
+                        
+                        
+                        
                         <p>Guid: <?= $producer->guid ?></p>
                         <p>Internet Address: <?= $producer->internet_address ?></p>
                         <p>Country: <?= $producer->country ?></p>

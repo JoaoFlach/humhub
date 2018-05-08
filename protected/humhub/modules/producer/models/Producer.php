@@ -2,6 +2,7 @@
 
 namespace humhub\modules\producer\models;
 use Yii;
+use humhub\modules\content\components\ContentContainerActiveRecord;
 
 /**
  * This is the model class for table "producer".
@@ -12,12 +13,12 @@ use Yii;
  * @property string $tags
  * @property string $internet_address
  * @property string $created_at
- * @property string $created_by (FK user id)
+ * @property string $created_by
  * @property string $updated_at
  * @property string $country
  * @property string $location
  */
-class Producer extends \yii\db\ActiveRecord 
+class Producer extends ContentContainerActiveRecord 
 {
     /**
      * @inheritdoc
