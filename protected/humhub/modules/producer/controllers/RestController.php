@@ -87,7 +87,7 @@ class RestController extends ActiveController {
         $responsebody = $response->getBody();
         return $responsebody;
     }
-        
+
     private function getCurrentDate () {
         $format ='Y-m-d H:i:s';
         $date = gmdate($format);

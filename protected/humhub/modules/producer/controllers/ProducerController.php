@@ -7,6 +7,7 @@ use humhub\modules\directory\components\UserPostsStreamAction;
 use humhub\modules\producer\components\Controller;
 use humhub\modules\producer\models\Producer;
 use yii\data\Pagination;
+use \Zend\Http\Client;
 
 
 use Yii;
@@ -86,6 +87,18 @@ class ProducerController extends Controller {
         $producer = Producer::find()->where(['id' => $id])->one();
 
         return $this->render('profile', ['producer' => $producer]);
+    }
+    
+    public function actionLatest($id) {
+        $producer = Producer::find()->where(['id' => $id])->one();
+        $url = $producer->internet_address;
+
+        $client = new Client();
+        $client->setUri($url);
+        $response = $client->send();
+        $responsebody = $response->getBody();
+        
+        return $this->renderAjax('latestData', ['response' => $responsebody]);
     }
 
     public function actionAttributes() {

@@ -12,4 +12,8 @@ humhub.module('producer', function (module, require, $) {
         init: init,
         initOnPjaxLoad: true
     });
+    
+    $('#producer-get-latest-data').click(function() {
+        alert('Chegou');
+    });
 });

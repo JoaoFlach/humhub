@@ -5,6 +5,8 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
+
+use yii\helpers\Html;
 ?>
 <div>
     <h2>Producer profile</h2>
@@ -16,7 +18,9 @@
         <p>Country: <?= $producer->country ?></p>
         <p>Tags: <?= $producer->tags ?></p>
         <p>Created at: <?= $producer->created_at ?></p>
-        <p>Created by: <?= $producer->user_id ?></p>
+        <p>Owned by: <?= $producer->user_id ?></p>
+        
+        <?php echo Html::a(Yii::t('ProducerModule.views_producer_profile', 'Get Latest Data'), ['/producer/producer/latest/', 'id' => $producer->id], array('class' => 'btn btn-info pull-right', 'data-target' => '#globalModal')); ?>
+        
     </div>
 </div>
-   
