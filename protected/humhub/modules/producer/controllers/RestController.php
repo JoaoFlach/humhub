@@ -3,6 +3,7 @@ namespace humhub\modules\producer\controllers;
 
 use \yii\rest\ActiveController;
 use humhub\modules\producer\models\Producer;
+use humhub\modules\producer\models\ProducerChannel;
 use \Zend\Http\Client;
 use Yii;
 
@@ -41,6 +42,10 @@ class RestController extends ActiveController {
     public function actionCreate() {
         $producer = new Producer();
         $guid = substr(com_create_guid(),1,-1);
+        
+        $channel = Yii::$app->request->getBodyParam('channel');
+        
+        $rawbody = Yii::$app->request->rawBody;
 
         $producer->internet_address = Yii::$app->request->getBodyParam('internet_address');
         $producer->guid = $guid;
@@ -75,7 +80,17 @@ class RestController extends ActiveController {
         } else {
             throw new Exception("Could not update this item");
         }
-    }   
+    }
+    
+    public function actionDelete($id){
+        $producer = Producer::find()->where(['id' => $id])->one();
+        
+        if ($producer->delete()) {
+            return $this->redirect(['producer/list']);
+        } else {
+            throw new Exception("Could not delete this item");
+        }
+    }
     
     public function actionRequest($id) {
         $producer = Producer::find()->where(['id' => $id])->one();
@@ -86,6 +101,20 @@ class RestController extends ActiveController {
         $response = $client->send();
         $responsebody = $response->getBody();
         return $responsebody;
+    }
+    
+    public function actionChannel() {
+        $producer_channel = new ProducerChannel();
+        
+        $producer_channel->http_method = Yii::$app->request->getBodyParam("http_method");
+        $producer_channel->internet_address = Yii::$app->request->getBodyParam("internet_address");
+        $producer_channel->producer_id = Yii::$app->request->getBodyParam("producer_id");
+        
+        if ($producer_channel->save()) {
+            return $this->redirect(['producer/profile', 'id' => $producer_channel->producer_id]);
+        } else {
+            throw new Exception("Could not save this item");
+        }
     }
 
     private function getCurrentDate () {

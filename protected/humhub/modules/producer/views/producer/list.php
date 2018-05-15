@@ -42,15 +42,13 @@ use humhub\modules\producer\widgets\Image;
                         <h4 class="media-heading">
                             <a href="<?= $producer->getUrl(); ?>"><?= Html::encode($producer->name); ?></a>
                         </h4>
-                        
-                        
-                        
-                        <p>Guid: <?= $producer->guid ?></p>
-                        <p>Internet Address: <?= $producer->internet_address ?></p>
-                        <p>Country: <?= $producer->country ?></p>
-                        <p>Tags: <?= $producer->tags ?></p>
-                        <p>Created at: <?= $producer->created_at ?></p>
-                        <p>Created by: <?= $producer->user_id ?></p>
+                        <h5>
+                            <?= $producer->country ?>
+                        </h5>
+                        <h5>
+                            Owned by <?= $producer->getProducerOwnerName() ?>
+                        </h5>
+                        <?php echo Html::a(Yii::t('ProducerModule.views_producer_profile', 'Delete'), ['/producer/rest/delete/', 'id' => $producer->id], array('class' => 'btn-xs btn-danger pull-right')); ?>
                     </div>
                 </div>                
             </li>        

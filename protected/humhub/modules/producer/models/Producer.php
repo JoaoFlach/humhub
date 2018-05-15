@@ -3,6 +3,7 @@
 namespace humhub\modules\producer\models;
 use Yii;
 use humhub\modules\content\components\ContentContainerActiveRecord;
+use humhub\modules\user\models\User;
 
 /**
  * This is the model class for table "producer".
@@ -17,6 +18,7 @@ use humhub\modules\content\components\ContentContainerActiveRecord;
  * @property string $updated_at
  * @property string $country
  * @property string $location
+ * @property integer $contentcontainer_id
  */
 class Producer extends ContentContainerActiveRecord 
 {
@@ -52,5 +54,19 @@ class Producer extends ContentContainerActiveRecord
     
     public function getUrl(){
         return "/humhub/producer/profile/".$this->id;
+    }
+    
+    /**
+     * @return string
+     */
+    public function getProducerOwnerName()
+    {
+        $user = User::findOne(['id' => $this->user_id]);
+
+        if ($user !== null && $user->isActive()) {
+            return $user->getDisplayName();
+        }
+
+        return '';
     }
 }

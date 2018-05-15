@@ -6,6 +6,7 @@ use humhub\components\behaviors\AccessControl;
 use humhub\modules\directory\components\UserPostsStreamAction;
 use humhub\modules\producer\components\Controller;
 use humhub\modules\producer\models\Producer;
+use humhub\modules\producer\models\ProducerChannel;
 use yii\data\Pagination;
 use \Zend\Http\Client;
 
@@ -85,8 +86,9 @@ class ProducerController extends Controller {
         
     public function actionProfile($id) {
         $producer = Producer::find()->where(['id' => $id])->one();
+        $channels = ProducerChannel::find()->where(['producer_id' => $id])->all();
 
-        return $this->render('profile', ['producer' => $producer]);
+        return $this->render('profile', ['producer' => $producer, 'channels' => $channels]);
     }
     
     public function actionLatest($id) {
@@ -99,6 +101,11 @@ class ProducerController extends Controller {
         $responsebody = $response->getBody();
         
         return $this->renderAjax('latestData', ['response' => $responsebody]);
+    }
+    
+    public function actionChannel($id) {
+        $producer = Producer::find()->where(['id' => $id])->one();
+        return $this->renderAjax('addChannel', ['producer' => $producer]);
     }
 
     public function actionAttributes() {
