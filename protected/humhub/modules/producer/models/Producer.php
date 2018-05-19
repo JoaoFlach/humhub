@@ -12,11 +12,10 @@ use humhub\modules\user\models\User;
  * @property string $guid
  * @property string $name
  * @property string $tags
- * @property string $internet_address
- * @property string $created_at
- * @property string $created_by
- * @property string $updated_at
  * @property string $country
+ * @property string $created_at
+ * @property string $updated_at
+ * @property string $created_by
  * @property string $location
  * @property integer $contentcontainer_id
  */
@@ -48,7 +47,6 @@ class Producer extends ContentContainerActiveRecord
         return [
             'id' => 'ID',
             'guid' => 'GUID',
-            'Internet_Address' => 'Internet Address',
         ];
     }
     

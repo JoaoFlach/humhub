@@ -84,11 +84,11 @@ class ProducerController extends Controller {
         return $this->render('create');
     }
         
-    public function actionProfile($id) {
+    public function actionProfile($id, $error_message = '') {
         $producer = Producer::find()->where(['id' => $id])->one();
         $channels = ProducerChannel::find()->where(['producer_id' => $id])->all();
 
-        return $this->render('profile', ['producer' => $producer, 'channels' => $channels]);
+        return $this->render('profile', ['producer' => $producer, 'channels' => $channels, 'error_message' => $error_message]);
     }
     
     public function actionLatest($id) {
@@ -104,8 +104,9 @@ class ProducerController extends Controller {
     }
     
     public function actionChannel($id) {
-        $producer = Producer::find()->where(['id' => $id])->one();
-        return $this->renderAjax('addChannel', ['producer' => $producer]);
+//        $producer = Producer::find()->where(['id' => $id])->one();
+        $error_status = Yii::$app->request->getBodyParam("error_status");
+        return $this->renderAjax('addChannel', ['producer_id' => $id, 'error_status' => $error_status]);
     }
 
     public function actionAttributes() {
@@ -122,5 +123,21 @@ class ProducerController extends Controller {
     public function actionUser(){
         $user = Yii::$app->user->getIdentity()->getId();
         return $user;
+    }
+    
+    public function actionTest($channel_id, $producer_name){
+        $channel = ProducerChannel::findOne(['id' => $channel_id]);
+        $url = $channel->internet_address;
+
+        $client = new Client();
+        $client->setUri($url);
+        $client->setHeaders(['Accept' => 'application/json']);
+        $response = $client->send();
+        if($response->getStatusCode()!=200){
+            $responsebody = 'Error in this request. HTTP STATUS is '.$response->getStatusCode();
+        } else {
+            $responsebody = $response->getBody();
+        }
+        return $this->renderAjax('test', ['producer_name' => $producer_name, 'content' => $responsebody]);
     }
 }

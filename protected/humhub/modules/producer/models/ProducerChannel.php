@@ -1,13 +1,13 @@
 <?php
 
 namespace humhub\modules\producer\models;
-use Yii;
 
 /**
  * This is the model class for table "producer_channel". 
  * @property integer $id
  * @property string $guid
  * @property string $http_method
+ * @property string $name
  * @property string $internet_address
  * @property string $payload_schema
  * @property integer $producer_id
@@ -43,6 +43,7 @@ class ProducerChannel extends \yii\db\ActiveRecord
             'http_method' => 'HTTP Method',
             'guid' => 'GUID',
             'Internet_Address' => 'Internet Address',
+            'name' => 'name'
         ];
     }
 }

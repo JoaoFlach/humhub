@@ -7,26 +7,38 @@
  */
 
 use yii\helpers\Html;
-use humhub\modules\user\models\User;
 ?>
 <div>
     <h2>Producer profile</h2>
+    <div class="text-danger"><?= $error_message ?></div>
     
     <div>
-        <p>Name: <?= $producer->name ?></p
-        <p>Guid: <?= $producer->guid ?></p>
-        <p>Internet Address: <?= $producer->internet_address ?></p>
+        <h4>Metadata</h4>
+        <p>Name: <?= $producer->name ?></p>
         <p>Country: <?= $producer->country ?></p>
         <p>Tags: <?= $producer->tags ?></p>
-        <p>Created at: <?= $producer->created_at ?></p>
         <p>Owned by: <?= $producer->getProducerOwnerName() ?></p>
         
-        <?php foreach ($channels as $channel) : ?>
-            <p><?= $channel->http_method ?><?= $channel->internet_address ?></p>
-        <?php endforeach; ?>
+        <h4>Channels</h4>
+        <ul class="list-group">
+            <?php foreach ($channels as $channel) : ?>
+                <li class="list-group-item">
+                    <div>
+                        <?= $channel->name ?>
+                        <div class="pull-right">
+                        <?php echo Html::a($channel->http_method, ['/producer/producer/test', 'channel_id' => $channel->id, 'producer_name' => $producer->name], ['class' => 'btn btn-info btn-xs', 'data-target' => '#globalModal']) ?>
+                        <?php echo Html::a('Edit', ['/producer/channel/edit', 'id' => $channel->id], ['class' => 'btn btn-primary btn-xs', 'data-target' => '#globalModal']) ?>
+                        <?php echo Html::a('Delete', ['/producer/channel/delete', 'id' => $channel->id], ['class' => 'btn btn-danger btn-xs', 'data-target' => '#globalModal']) ?>
+                        </div>
+                    </div>
+                </li>
+            <?php endforeach; ?>
+        </ul>
         
-        <?php echo Html::a(Yii::t('ProducerModule.views_producer_profile', 'Get Latest Data'), ['/producer/producer/latest/', 'id' => $producer->id], array('class' => 'btn btn-info pull-right', 'data-target' => '#globalModal')); ?>
-        <?php echo Html::a(Yii::t('ProducerModule.views_producer_profile', 'Delete'), ['/producer/rest/delete/', 'id' => $producer->id], array('class' => 'btn btn-danger pull-right')); ?>
-        <?php echo Html::a(Yii::t('ProducerModule.views_producer_profile', 'Add Channel'), ['/producer/producer/channel/', 'id' => $producer->id], array('class' => 'btn btn-info pull-right', 'data-target' => '#globalModal')); ?>
+        <h4>Options</h4>
+        <div class="btn-group-sm">
+            <?php echo Html::a(Yii::t('ProducerModule.views_producer_profile', 'Delete'), ['/producer/rest/delete/', 'id' => $producer->id], ['class' => 'btn btn-danger']); ?>
+            <?php echo Html::a(Yii::t('ProducerModule.views_producer_profile', 'Add Channel'), ['/producer/producer/channel/', 'id' => $producer->id], ['class' => 'btn btn-info', 'data-target' => '#globalModal']); ?>
+        </div>
     </div>
 </div>

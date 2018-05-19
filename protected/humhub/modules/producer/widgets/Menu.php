@@ -45,7 +45,6 @@ class Menu extends \humhub\widgets\BaseMenu
             'sortOrder' => 300,
             'isActive' => (Yii::$app->controller->action->id == "create"),
         ));
-
         
         parent::init();
     }

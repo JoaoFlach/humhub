@@ -6,7 +6,7 @@
         <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
             <h4 class="modal-title"
-                id="myModalLabel"><?php echo Yii::t("ProducerModule.views_producer_add_channel", "Add Channel"); ?></h4>
+                id="myModalLabel"><?php echo Yii::t("ProducerModule.views_producer_add_channel", "AdEditd Channel"); ?></h4>
         </div>
 
         <form method="post" action="/humhub/producer/rest/channel">
@@ -23,7 +23,7 @@
                 <label for="producerChannelHttpMethod">Address</label>
                 <input type='text' name='internet_address' class='form-control'/>
                 
-                <input type="hidden" name="producer_id" value="<?php echo $producer_id ?>"/>
+                <input type="hidden" name="producer_id" value=""/>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-primary" data-dismiss="modal"><?php echo Yii::t('ProducerModule.views_producer_add_channel', 'Close'); ?></button>
