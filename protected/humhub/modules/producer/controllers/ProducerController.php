@@ -66,7 +66,9 @@ class ProducerController extends Controller {
     }
     
     public function actionCreate(){
-        return $this->render('create');
+        $countrySelect = new CountrySelect();
+        $countries = $countrySelect->getSelectItems();
+        return $this->render('create', ['countries' => $countries]);
     }
     
     public function actionEdit($id) {
