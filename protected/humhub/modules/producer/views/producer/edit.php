@@ -39,8 +39,7 @@ use humhub\modules\user\models\fieldtype\CountrySelect;
             <div class="modal-footer">
                 <?= Html::button('Close', ['class' => 'btn btn-primary', 
                     'data-dismiss' => 'modal']) ?>
-                <?= Html::input('submit', '', 'Save', ['class' => 'btn btn-info', 
-                    'data-dismiss' => 'modal']) ?>
+                <?= Html::input('submit', '', 'Save', ['class' => 'btn btn-info']) ?>
             </div>
         </form>
         

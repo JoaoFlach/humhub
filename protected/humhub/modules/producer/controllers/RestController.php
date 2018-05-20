@@ -117,7 +117,7 @@ class RestController extends ActiveController {
 
         $producer->name = Yii::$app->request->getBodyParam('name');
         $producer->tags = Yii::$app->request->getBodyParam('tags');
-        $producer->country = Yii::$app->request->getBodyParam('countryCode');
+        $producer->country = Yii::$app->request->getBodyParam('country');
         $producer->location = Yii::$app->request->getBodyParam('location');
 
         $currentDate = $this->getCurrentDate();
@@ -129,13 +129,13 @@ class RestController extends ActiveController {
             $guid = substr(com_create_guid(), 1, -1);
             $producer->guid = $guid;
 
-            if ($producer_channel->save()) {
+            if ($producer->save()) {
                 return $this->redirect(['producer/list']);
             } else {
                 throw new Exception("Could not save this item");
             }
         } else {
-            $producer_channel->update();
+            $producer->update();
             return $this->redirect(['producer/profile', 'id' => $id]);
         }
     }
