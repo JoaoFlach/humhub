@@ -108,6 +108,10 @@ class RestController extends ActiveController {
         }
     }
 
+    public function actionSaveProducer() {
+        
+    }
+
     public function actionUpdate($id) {
         $producer = Producer::find()->where(['id' => $id])->one();
 
