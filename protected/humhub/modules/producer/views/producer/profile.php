@@ -43,8 +43,8 @@ use yii\helpers\Html;
             <?php echo Html::a('Edit', ['/producer/producer/edit/', 
                 'id' => $producer->id], ['class' => 'btn btn-primary', 
                     'data-target' => '#globalModal']); ?>
-            <?php echo Html::a('+ Channel', ['/producer/producer/channel/', 
-                'id' => $producer->id], ['class' => 'btn btn-primary', 
+            <?php echo Html::a('+ Channel', ['/producer/channel/create/', 
+                'producer_id' => $producer->id], ['class' => 'btn btn-primary', 
                     'data-target' => '#globalModal']); ?>
         </div>
     </div>

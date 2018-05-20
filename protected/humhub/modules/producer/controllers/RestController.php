@@ -35,42 +35,6 @@ class RestController extends ActiveController {
         ];
     }
 
-    public function actionSaveChannel() {
-        $producer_channel = new ProducerChannel();
-        $id = Yii::$app->request->getBodyParam("id");
-
-        if (isset($id)) {
-            $producer_channel = ProducerChannel::findOne(['id' => $id]);
-        }
-
-        $producer_id = Yii::$app->request->getBodyParam("producer_id");
-        $http_method = Yii::$app->request->getBodyParam("http_method");
-        $internet_address = Yii::$app->request->getBodyParam("internet_address");
-        $name = Yii::$app->request->getBodyParam("name");
-        $http_response = $this->callHttp($internet_address);
-        $status = $http_response->getStatusCode();
-
-        if ($status < 200 || $status > 299) {
-            return $this->redirect(['producer/profile', 'id' => $producer_id, "error_message" => 'The URL used to create the channel was not valid']);
-        }
-
-        $producer_channel->http_method = $http_method;
-        $producer_channel->internet_address = $internet_address;
-        $producer_channel->producer_id = $producer_id;
-        $producer_channel->name = $name;
-
-        if (isset($id)) {
-            $producer_channel->update();
-            return $this->redirect(['producer/profile', 'id' => $producer_id]);
-        } else {
-            if ($producer_channel->save()) {
-                return $this->redirect(['producer/profile', 'id' => $producer_id]);
-            } else {
-                throw new Exception("Could not save this item");
-            }
-        }
-    }
-
     public function actionCreate() {
         $producer = new Producer();
 
@@ -106,7 +70,56 @@ class RestController extends ActiveController {
             throw new Exception("Could not delete this item");
         }
     }
+    
+    public function actionDeleteChannel() {
+        $id = Yii::$app->request->getBodyParam('id');
+        $channel = ProducerChannel::find()->where(['id' => $id])->one();
+        $producer_id = $channel->producer_id;
 
+        if ($channel->delete()) {
+            return $this->redirect(['producer/profile', 
+                'id' => $producer_id]);
+        } else {
+            throw new Exception("Could not delete this item");
+        }
+    }
+
+    public function actionSaveChannel() {
+        $producer_channel = new ProducerChannel();
+        $id = Yii::$app->request->getBodyParam("id");
+
+        if (isset($id)) {
+            $producer_channel = ProducerChannel::findOne(['id' => $id]);
+        }
+
+        $producer_id = Yii::$app->request->getBodyParam("producer_id");
+        $http_method = Yii::$app->request->getBodyParam("http_method");
+        $internet_address = Yii::$app->request->getBodyParam("internet_address");
+        $name = Yii::$app->request->getBodyParam("name");
+        $http_response = $this->callHttp($internet_address);
+        $status = $http_response->getStatusCode();
+
+        if ($status < 200 || $status > 299) {
+            return $this->redirect(['producer/profile', 'id' => $producer_id, "error_message" => 'The URL used to create the channel was not valid']);
+        }
+
+        $producer_channel->http_method = $http_method;
+        $producer_channel->internet_address = $internet_address;
+        $producer_channel->producer_id = $producer_id;
+        $producer_channel->name = $name;
+
+        if (isset($id)) {
+            $producer_channel->update();
+            return $this->redirect(['producer/profile', 'id' => $producer_id]);
+        } else {
+            if ($producer_channel->save()) {
+                return $this->redirect(['producer/profile', 'id' => $producer_id]);
+            } else {
+                throw new Exception("Could not save this item");
+            }
+        }
+    }
+    
     public function actionSaveProducer() {
         $producer = new Producer();
         $id = Yii::$app->request->getBodyParam("id");

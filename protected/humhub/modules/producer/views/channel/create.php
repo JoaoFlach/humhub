@@ -1,8 +1,7 @@
-<?php
-?>
+<?php ?>
 <div class="modal-dialog">
     <div class="modal-content">
-        
+
         <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
             <h4 class="modal-title"
@@ -11,18 +10,24 @@
 
         <form method="post" action="/humhub/producer/rest/save-channel">
             <div class="modal-body">
-                <label for="producerChannelHttpMethod">Channel name</label>
-                <input type='text' name='name' class='form-control'/>
-                
-                <label for="producerChannelHttpMethod">Http Method</label>
-                <select class="form-control" name="http_method" id="producerChannelHttpMethod">
-                    <option value="GET">GET</option>
-                    <option value="POST">POST</option>
-                </select>
-                
-                <label for="producerChannelHttpMethod">Address</label>
-                <input type='text' name='internet_address' class='form-control'/>
-                
+                <div class="form-group">
+                    <label for="producerChannelHttpMethod">Channel name</label>
+                    <input type='text' name='name' class='form-control'/>
+                </div>
+
+                <div class="form-group">
+                    <label for="producerChannelHttpMethod">Http Method</label>
+                    <select class="form-control" name="http_method" id="producerChannelHttpMethod">
+                        <option value="GET">GET</option>
+                        <option value="POST">POST</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="producerChannelHttpMethod">Address</label>
+                    <input type='text' name='internet_address' class='form-control'/>
+                </div>
+
                 <input type="hidden" name="producer_id" value="<?php echo $producer_id ?>"/>
             </div>
             <div class="modal-footer">
@@ -30,7 +35,7 @@
                 <input type="submit" class="btn btn-info" value="<?php echo Yii::t('ProducerModule.views_producer_add_channel', 'Save'); ?>"/>
             </div>
         </form>
-        
+
     </div>
 
 </div>
