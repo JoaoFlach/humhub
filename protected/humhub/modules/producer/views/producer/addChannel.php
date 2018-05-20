@@ -9,7 +9,7 @@
                 id="myModalLabel"><?php echo Yii::t("ProducerModule.views_producer_add_channel", "Add Channel"); ?></h4>
         </div>
 
-        <form method="post" action="/humhub/producer/rest/channel">
+        <form method="post" action="/humhub/producer/rest/save-channel">
             <div class="modal-body">
                 <label for="producerChannelHttpMethod">Channel name</label>
                 <input type='text' name='name' class='form-control'/>

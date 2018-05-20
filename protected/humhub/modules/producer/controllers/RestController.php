@@ -35,7 +35,7 @@ class RestController extends ActiveController {
         ];
     }
 
-    public function actionChannel() {
+    public function actionSaveChannel() {
         $producer_channel = new ProducerChannel();
         $id = Yii::$app->request->getBodyParam("id");
 
