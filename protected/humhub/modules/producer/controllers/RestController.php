@@ -73,7 +73,6 @@ class RestController extends ActiveController {
 
     public function actionCreate() {
         $producer = new Producer();
-        $guid = substr(com_create_guid(), 1, -1);
 
         $channel = Yii::$app->request->getBodyParam('channel');
 
@@ -109,7 +108,36 @@ class RestController extends ActiveController {
     }
 
     public function actionSaveProducer() {
-        
+        $producer = new Producer();
+        $id = Yii::$app->request->getBodyParam("id");
+
+        if (isset($id)) {
+            $producer = Producer::findOne(['id' => $id]);
+        }
+
+        $producer->name = Yii::$app->request->getBodyParam('name');
+        $producer->tags = Yii::$app->request->getBodyParam('tags');
+        $producer->country = Yii::$app->request->getBodyParam('countryCode');
+        $producer->location = Yii::$app->request->getBodyParam('location');
+
+        $currentDate = $this->getCurrentDate();
+        $producer->updated_at = $currentDate;
+
+        if (!isset($id)) {
+            $producer->created_at = $currentDate;
+            $producer->user_id = Yii::$app->user->id;
+            $guid = substr(com_create_guid(), 1, -1);
+            $producer->guid = $guid;
+
+            if ($producer_channel->save()) {
+                return $this->redirect(['producer/list']);
+            } else {
+                throw new Exception("Could not save this item");
+            }
+        } else {
+            $producer_channel->update();
+            return $this->redirect(['producer/profile', 'id' => $id]);
+        }
     }
 
     public function actionUpdate($id) {
