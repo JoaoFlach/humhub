@@ -9,6 +9,7 @@ use humhub\modules\producer\models\Producer;
 use humhub\modules\producer\models\ProducerChannel;
 use yii\data\Pagination;
 use \Zend\Http\Client;
+use humhub\modules\user\models\fieldtype\CountrySelect;
 
 
 use Yii;
@@ -53,8 +54,48 @@ class ProducerController extends Controller {
         ];
     }
 
+    public function actionAttributes() {
+        $producer = new Producer();
+        return $producer->attributes();
+    }
+    
+    public function actionChannel($id) {
+    //        $producer = Producer::find()->where(['id' => $id])->one();
+        $error_status = Yii::$app->request->getBodyParam("error_status");
+        return $this->renderAjax('addChannel', ['producer_id' => $id, 'error_status' => $error_status]);
+    }
+    
+    public function actionCreate(){
+        return $this->render('create');
+    }
+    
+    public function actionEdit($id) {
+        $countrySelect = new CountrySelect();
+        $countries = $countrySelect->getSelectItems();
+        $producer = Producer::findOne(['id' => $id]);
+        return $this->renderAjax('edit', ['producer' => $producer, 'countries' => $countries]);
+    }
+    
+    public function actionGuid () {
+        $guid = substr(com_create_guid(),1,-1);
+        
+        return $guid;
+    }
+    
     public function actionIndex() {
         return $this->redirect(['list']);
+    }
+    
+    public function actionLatest($id) {
+        $producer = Producer::find()->where(['id' => $id])->one();
+        $url = $producer->internet_address;
+
+        $client = new Client();
+        $client->setUri($url);
+        $response = $client->send();
+        $responsebody = $response->getBody();
+        
+        return $this->renderAjax('latestData', ['response' => $responsebody]);
     }
     
     public function actionList() {
@@ -80,49 +121,11 @@ class ProducerController extends Controller {
         ]);
     }
     
-    public function actionCreate(){
-        return $this->render('create');
-    }
-        
     public function actionProfile($id, $error_message = '') {
         $producer = Producer::find()->where(['id' => $id])->one();
         $channels = ProducerChannel::find()->where(['producer_id' => $id])->all();
 
         return $this->render('profile', ['producer' => $producer, 'channels' => $channels, 'error_message' => $error_message]);
-    }
-    
-    public function actionLatest($id) {
-        $producer = Producer::find()->where(['id' => $id])->one();
-        $url = $producer->internet_address;
-
-        $client = new Client();
-        $client->setUri($url);
-        $response = $client->send();
-        $responsebody = $response->getBody();
-        
-        return $this->renderAjax('latestData', ['response' => $responsebody]);
-    }
-    
-    public function actionChannel($id) {
-//        $producer = Producer::find()->where(['id' => $id])->one();
-        $error_status = Yii::$app->request->getBodyParam("error_status");
-        return $this->renderAjax('addChannel', ['producer_id' => $id, 'error_status' => $error_status]);
-    }
-
-    public function actionAttributes() {
-        $producer = new Producer();
-        return $producer->attributes();
-    }
-
-    public function actionGuid () {
-        $guid = substr(com_create_guid(),1,-1);
-        
-        return $guid;
-    }
-    
-    public function actionUser(){
-        $user = Yii::$app->user->getIdentity()->getId();
-        return $user;
     }
     
     public function actionTest($channel_id, $producer_name){
@@ -139,5 +142,10 @@ class ProducerController extends Controller {
             $responsebody = $response->getBody();
         }
         return $this->renderAjax('test', ['producer_name' => $producer_name, 'content' => $responsebody]);
+    }
+    
+    public function actionUser(){
+        $user = Yii::$app->user->getIdentity()->getId();
+        return $user;
     }
 }

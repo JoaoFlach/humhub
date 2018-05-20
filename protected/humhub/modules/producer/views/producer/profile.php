@@ -37,8 +37,15 @@ use yii\helpers\Html;
         
         <h4>Options</h4>
         <div class="btn-group-sm">
-            <?php echo Html::a(Yii::t('ProducerModule.views_producer_profile', 'Delete'), ['/producer/rest/delete/', 'id' => $producer->id], ['class' => 'btn btn-danger']); ?>
-            <?php echo Html::a(Yii::t('ProducerModule.views_producer_profile', 'Add Channel'), ['/producer/producer/channel/', 'id' => $producer->id], ['class' => 'btn btn-info', 'data-target' => '#globalModal']); ?>
+            <?php echo Html::a('Delete', ['/producer/rest/delete/', 
+                'id' => $producer->id], ['class' => 'btn btn-danger', 
+                    'data-target' => '#globalModal']); ?>
+            <?php echo Html::a('Edit', ['/producer/producer/edit/', 
+                'id' => $producer->id], ['class' => 'btn btn-primary', 
+                    'data-target' => '#globalModal']); ?>
+            <?php echo Html::a('+ Channel', ['/producer/producer/channel/', 
+                'id' => $producer->id], ['class' => 'btn btn-primary', 
+                    'data-target' => '#globalModal']); ?>
         </div>
     </div>
 </div>

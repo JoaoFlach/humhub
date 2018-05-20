@@ -15,22 +15,30 @@ use yii\helpers\Html;
 
         <form method="post" action="/humhub/producer/rest/channel">
             <div class="modal-body">
-                <label>Channel name</label>
-                <?= Html::input('text', 'name', $channel->name, 
+                <div class="form-group">
+                    <label>Channel name</label>
+                    <?= Html::input('text', 'name', $channel->name, 
                         ['class' => 'form-control']) ?>
+                </div>
                 
-                <label>Address</label>
-                <?= Html::input('text', 'internet_address', 
-                        $channel->internet_address, ['class' => 'form-control']) ?>
+                <div class="form-group">
+                    <label>Address</label>
+                    <?= Html::input('text', 'internet_address', 
+                            $channel->internet_address, 
+                            ['class' => 'form-control']) ?>
+                </div>
                 
-                <label >Http Method</label>
-                <?= Html::dropDownList('http_method', $channel->http_method, 
-                        ["GET" => "GET", "POST" => "POST"], 
-                        ['class' => 'form-control']) ?>
-                
-                <?= Html::input('hidden', 'producer_id', $channel->producer_id) ?>
-                <?= Html::input('hidden', 'id', $channel->id) ?>
+                <div class="form-group">
+                    <label >Http Method</label>
+                    <?= Html::dropDownList('http_method', $channel->http_method, 
+                            ["GET" => "GET", "POST" => "POST"], 
+                            ['class' => 'form-control']) ?>
+
+                    <?= Html::input('hidden', 'producer_id', $channel->producer_id) ?>
+                    <?= Html::input('hidden', 'id', $channel->id) ?>
+                </div>
             </div>
+            
             <div class="modal-footer">
                 <?= Html::button('Close', ['class' => 'btn btn-primary', 
                     'data-dismiss' => 'modal']) ?>
