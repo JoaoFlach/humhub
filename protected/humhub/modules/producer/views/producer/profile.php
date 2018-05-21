@@ -26,7 +26,7 @@ use yii\helpers\Html;
                     <div>
                         <?= $channel->name ?>
                         <div class="pull-right">
-                        <?php echo Html::a($channel->http_method, ['/producer/producer/test', 'channel_id' => $channel->id, 'producer_name' => $producer->name], ['class' => 'btn btn-info btn-xs', 'data-target' => '#globalModal']) ?>
+                        <?php echo Html::a($channel->http_method, ['/producer/channel/request', 'channel_id' => $channel->id, 'producer_name' => $producer->name], ['class' => 'btn btn-info btn-xs', 'data-target' => '#globalModal']) ?>
                         <?php echo Html::a('Edit', ['/producer/channel/edit', 'id' => $channel->id], ['class' => 'btn btn-primary btn-xs', 'data-target' => '#globalModal']) ?>
                         <?php echo Html::a('Delete', ['/producer/channel/delete', 'id' => $channel->id], ['class' => 'btn btn-danger btn-xs', 'data-target' => '#globalModal']) ?>
                         </div>
@@ -37,7 +37,7 @@ use yii\helpers\Html;
         
         <h4>Options</h4>
         <div class="btn-group-sm">
-            <?php echo Html::a('Delete', ['/producer/rest/delete/', 
+            <?php echo Html::a('Delete', ['/producer/producer/delete/', 
                 'id' => $producer->id], ['class' => 'btn btn-danger', 
                     'data-target' => '#globalModal']); ?>
             <?php echo Html::a('Edit', ['/producer/producer/edit/', 

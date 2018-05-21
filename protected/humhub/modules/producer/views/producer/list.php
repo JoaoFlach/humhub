@@ -48,7 +48,11 @@ use humhub\modules\producer\widgets\Image;
                         <h5>
                             Owned by <?= $producer->getProducerOwnerName() ?>
                         </h5>
-                        <?php echo Html::a(Yii::t('ProducerModule.views_producer_profile', 'Delete'), ['/producer/rest/delete/', 'id' => $producer->id], array('class' => 'btn-xs btn-danger pull-right')); ?>
+                        <?php echo Html::a('Delete', 
+                                ['/producer/producer/delete/', 
+                                    'id' => $producer->id], 
+                                ['class' => 'btn-xs btn-danger pull-right',
+                                    'data-target' => '#globalModal']); ?>
                     </div>
                 </div>                
             </li>        

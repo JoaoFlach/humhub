@@ -71,6 +71,10 @@ class ProducerController extends Controller {
         return $this->render('create', ['countries' => $countries]);
     }
     
+    public function actionDelete($id) {
+        return $this->renderAjax('delete', ['id' => $id]);
+    }  
+    
     public function actionEdit($id) {
         $countrySelect = new CountrySelect();
         $countries = $countrySelect->getSelectItems();

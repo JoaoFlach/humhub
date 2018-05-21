@@ -83,6 +83,17 @@ class RestController extends ActiveController {
             throw new Exception("Could not delete this item");
         }
     }
+    
+    public function actionDeleteProducer() {
+        $id = Yii::$app->request->getBodyParam('id');
+        $producer = Producer::find()->where(['id' => $id])->one();
+
+        if ($producer->delete()) {
+            return $this->redirect(['producer/list']);
+        } else {
+            throw new Exception("Could not delete this item");
+        }
+    }
 
     public function actionSaveChannel() {
         $producer_channel = new ProducerChannel();

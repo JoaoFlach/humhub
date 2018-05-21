@@ -12,7 +12,7 @@ use humhub\modules\producer\widgets\Sidebar;
         <div class="col-md-2">
             <?= Menu::widget(); ?>
             <?php if(Yii::$app->controller->action->id == 'profile') :?>
-                <?= ProfileMenu::widget(); ?>
+                
             <?php endif; ?>
         </div>
         <div class="col-md-7">
