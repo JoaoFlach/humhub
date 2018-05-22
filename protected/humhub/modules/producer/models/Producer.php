@@ -67,4 +67,22 @@ class Producer extends ContentContainerActiveRecord
 
         return '';
     }
+    
+    public function isProducerOwner($userId) {
+        return $this->user_id == $userId;
+    }
+    
+    public function createUrl($route = null, $params = [], $scheme = false)
+    {
+        if ($route === null) {
+            $route = '/producer/profile';
+        }
+
+        array_unshift($params, $route);
+        if (!isset($params['uguid'])) {
+            $params['uguid'] = $this->guid;
+        }
+
+        return \yii\helpers\Url::toRoute($params, $scheme);
+    }
 }

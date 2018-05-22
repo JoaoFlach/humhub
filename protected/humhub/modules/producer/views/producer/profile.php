@@ -9,6 +9,11 @@
 use yii\helpers\Html;
 ?>
 <div>
+    <div class="row">
+        <div class="col-md-12">
+            <?= \humhub\modules\producer\widgets\ProfileHeader::widget(['producer' => $producer]); ?>
+        </div>
+    </div>
     <h2>Producer profile</h2>
     <div class="text-danger"><?= $error_message ?></div>
     
@@ -39,10 +44,7 @@ use yii\helpers\Html;
         <div class="btn-group-sm">
             <?php echo Html::a('Delete', ['/producer/producer/delete/', 
                 'id' => $producer->id], ['class' => 'btn btn-danger', 
-                    'data-target' => '#globalModal']); ?>
-            <?php echo Html::a('Edit', ['/producer/producer/edit/', 
-                'id' => $producer->id], ['class' => 'btn btn-primary', 
-                    'data-target' => '#globalModal']); ?>
+                    'data-target' => '#globalModal']); ?>            
             <?php echo Html::a('+ Channel', ['/producer/channel/create/', 
                 'producer_id' => $producer->id], ['class' => 'btn btn-primary', 
                     'data-target' => '#globalModal']); ?>

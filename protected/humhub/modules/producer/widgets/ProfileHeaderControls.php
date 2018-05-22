@@ -1,6 +1,6 @@
 <?php
 
-namespace humhub\modules\user\widgets;
+namespace humhub\modules\producer\widgets;
 
 /**
  * ProfileHeaderControlsWidget
@@ -14,6 +14,7 @@ class ProfileHeaderControls extends \humhub\widgets\BaseStack
 
     public $seperator = "&nbsp;";
     public $user;
+    public $producer;
 
 }
 
