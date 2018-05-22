@@ -9,10 +9,9 @@ use humhub\modules\producer\widgets\Sidebar;
 
 <div class="container">
     <div class="row">
-        <div class="col-md-2">
-            <?= Menu::widget(); ?>
-            <?php if(Yii::$app->controller->action->id == 'profile') :?>
-                
+        <div class="col-md-2">            
+            <?php if(Yii::$app->controller->action->id == 'list') :?>
+                <?= Menu::widget(); ?>
             <?php endif; ?>
         </div>
         <div class="col-md-7">

@@ -185,6 +185,12 @@ if ($allowModifyProfileBanner || $allowModifyProfileImage) {
                             'producer' => $producer,
                         ]);
                         ?>
+                        <?php
+                        echo humhub\modules\producer\widgets\ProfileDeleteButton::widget([
+                            'user' => Yii::$app->user,
+                            'producer' => $producer,
+                        ]);
+                        ?>
                     </div>
                 </div>
             </div>
