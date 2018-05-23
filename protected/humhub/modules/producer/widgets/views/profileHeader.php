@@ -180,6 +180,12 @@ if ($allowModifyProfileBanner || $allowModifyProfileImage) {
 
                     <div class="controls controls-header pull-right">
                         <?php
+                        echo humhub\modules\producer\widgets\ProfileConnectButton::widget([
+                            'user' => Yii::$app->user,
+                            'producer' => $producer,
+                        ]);
+                        ?>
+                        <?php
                         echo humhub\modules\producer\widgets\ProfileAddChannelButton::widget([
                             'user' => Yii::$app->user,
                             'producer' => $producer,
