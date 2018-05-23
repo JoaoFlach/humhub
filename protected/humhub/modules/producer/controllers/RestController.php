@@ -96,6 +96,7 @@ class RestController extends ActiveController {
     }
 
     public function actionSaveChannel() {
+        $property = Yii::$app->request->getBodyParam("property");
         $producer_channel = new ProducerChannel();
         $id = Yii::$app->request->getBodyParam("id");
 
@@ -106,6 +107,7 @@ class RestController extends ActiveController {
         $producer_id = Yii::$app->request->getBodyParam("producer_id");
         $http_method = Yii::$app->request->getBodyParam("http_method");
         $internet_address = Yii::$app->request->getBodyParam("internet_address");
+        
         $name = Yii::$app->request->getBodyParam("name");
         $http_response = $this->callHttp($internet_address);
         $status = $http_response->getStatusCode();

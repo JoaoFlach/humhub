@@ -27,6 +27,12 @@
                     <label for="producerChannelHttpMethod">Address</label>
                     <input type='text' name='internet_address' class='form-control'/>
                 </div>
+                
+                 <div class="form-group">
+                    <label for="producerChannelHttpMethod">Properties</label>
+                    <input type='text' name='property[name]' class='form-control'/>
+                    <input type='text' name='property[type]' class='form-control'/>
+                </div>
 
                 <input type="hidden" name="producer_id" value="<?php echo $producer_id ?>"/>
             </div>
