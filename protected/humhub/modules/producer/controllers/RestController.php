@@ -98,22 +98,6 @@ class RestController extends ActiveController {
     }
 
     public function actionSaveChannel() {
-        $form_properties = Yii::$app->request->getBodyParam("property");
-        $property_obj = new ProducerChannelProperty();
-
-        foreach ($form_properties as $form_property) {
-            if (!$property_obj->isValidType($form_property['type'])) {
-                throw new Exception("Invalid type value '" . $form_property['type'] . "'");
-            }
-        }
-
-        if (!$property_obj->isValidType($form_property['type'])) {
-            throw new Exception("Invalid type value '" . $form_property['type'] . "'");
-        }
-
-        $property_obj->property_name = $form_property['name'];
-        $property_obj->type = $form_property['type'];
-
         $producer_channel = new ProducerChannel();
         $id = Yii::$app->request->getBodyParam("id");
 
@@ -130,10 +114,41 @@ class RestController extends ActiveController {
             throw new Exception("Could not save the ProducerChannel");
         }
 
-        $property_obj->channel_id = $producer_channel->id;
+        $form_properties = Yii::$app->request->getBodyParam("property");
 
-        if (!$property_obj->save()) {
-            throw new Exception("Could not save the ProducerChannelProperty");
+        $current_channel_properties = 
+                ProducerChannelProperty::findAll(
+                        ['channel_id' => $producer_channel->id]);
+        
+        $ids_to_delete = array();
+        foreach ($current_channel_properties as $current_channel_property){
+            array_push($ids_to_delete, $current_channel_property->id);
+        }
+        
+        foreach ($form_properties as $form_property) {
+            $property_id = $form_property['id'];
+            $property_obj = new ProducerChannelProperty();
+            
+            if($property_id!==''){
+                $property_obj = ProducerChannelProperty::findOne(['id' => $property_id]);
+            } 
+            
+            if (!$property_obj->isValidType($form_property['type'])) {
+                throw new Exception("Invalid type value '" . $form_property['type'] . "'");
+            }
+            
+            $property_obj->channel_id = $producer_channel->id;
+            $property_obj->type = $form_property['type'];
+            $property_obj->property_name = $form_property['name'];
+
+            if (!$property_obj->save()) {
+                throw new Exception("Could not save the ProducerChannelProperty");
+            }
+            $ids_to_delete = array_diff($ids_to_delete, [$property_obj->id]);
+        }
+        
+        foreach ($ids_to_delete as $id_to_delete) {
+            ProducerChannelProperty::deleteAll(['id' => $id_to_delete]);
         }
 
         return $this->redirect(['producer/profile',

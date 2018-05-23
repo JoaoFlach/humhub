@@ -36,6 +36,7 @@ use yii\helpers\Html;
 
                 <div id='channel-properties'>
                     <div class="form-group" id='channel-property-1'>
+                        <input type='hidden' name='property[1][id]' value=''>
                         <div class="row">
                             <div class="col-md-6">
                                 <label>Name</label>
@@ -78,6 +79,7 @@ use yii\helpers\Html;
         var new_channelprop_id = "channel-property-" + id;
         return "" +
         "<div class='form-group' id="+new_channelprop_id+">" +
+        "<input type='hidden' name='property["+ id +"][id]' value=''>" +
             "<div class='row'>" +
                 "<div class='col-md-6'>" +
                     "<label>Name</label>" +

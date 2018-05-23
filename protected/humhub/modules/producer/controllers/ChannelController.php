@@ -5,6 +5,7 @@ namespace humhub\modules\producer\controllers;
 use humhub\components\behaviors\AccessControl;
 use humhub\modules\producer\components\Controller;
 use humhub\modules\producer\models\ProducerChannel;
+use humhub\modules\producer\models\ProducerChannelProperty;
 use \Zend\Http\Client;
 use Yii;
 
@@ -39,7 +40,9 @@ class ChannelController extends Controller {
 
     public function actionEdit($id) {
         $channel = ProducerChannel::findOne(['id' => $id]);
-        return $this->renderAjax('edit', ['channel' => $channel]);
+        $channel_properties = ProducerChannelProperty::findAll(['channel_id' => $id]);
+        return $this->renderAjax('edit', ['channel' => $channel, 
+            'channel_properties' => $channel_properties]);
     }
 
     public function actionDelete($id) {
