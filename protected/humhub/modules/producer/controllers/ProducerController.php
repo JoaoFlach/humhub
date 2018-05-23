@@ -65,6 +65,15 @@ class ProducerController extends Controller {
         return $this->renderAjax('addChannel', ['producer_id' => $id, 'error_status' => $error_status]);
     }
     
+    public function actionConnect($producer_id){
+        $producers = Producer::find()->all();
+        $origin_select_items = $this->getConnectOriginSelectItems($producers);
+        return $this->renderAjax('connect', [
+            'producers' => $producers,
+            'origin_select_items' => $origin_select_items
+        ]);
+    }
+    
     public function actionCreate(){
         $countrySelect = new CountrySelect();
         $countries = $countrySelect->getSelectItems();
@@ -153,5 +162,16 @@ class ProducerController extends Controller {
     public function actionUser(){
         $user = Yii::$app->user->getIdentity()->getId();
         return $user;
+    }
+    
+    private function getConnectOriginSelectItems($producers) {
+        $select_items = [];
+        foreach($producers as $producer) {
+            $key = $producer->id;
+            $value = $producer->name;
+            $select_items[$key] = $value;            
+        }
+        
+        return $select_items;
     }
 }
