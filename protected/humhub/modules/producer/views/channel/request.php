@@ -20,21 +20,28 @@ use yii\helpers\Html;
             <table class="table">
                 <thead>
                     <tr>
-                        <?php foreach ($content as $key => $value) : ?>
-                            <th>
-                                <?= $key ?>
-                            </th>
-                        <?php endforeach; ?>
+                        <th>
+                            Property name
+                        </th>
+                        <th>
+                            Current value
+                        </th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr>
-                        <?php foreach ($content as $key => $value) : ?>
+
+                    <?php foreach ($content as $key => $value) : ?>
+
+                        <tr>
+                            <td>
+                                <?= $key ?>
+                            </td>
                             <td>
                                 <?= $value ?>
                             </td>
-                        <?php endforeach; ?>
-                    </tr>
+                        </tr>
+                    <?php endforeach; ?>
+
                 </tbody>
             </table>
         </div>

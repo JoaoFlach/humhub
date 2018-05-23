@@ -3,8 +3,10 @@
 namespace humhub\modules\producer\controllers;
 
 use \yii\rest\ActiveController;
+use \yii\base\Exception;
 use humhub\modules\producer\models\Producer;
 use humhub\modules\producer\models\ProducerChannel;
+use humhub\modules\producer\models\ProducerChannelProperty;
 use \Zend\Http\Client;
 use Yii;
 
@@ -70,20 +72,20 @@ class RestController extends ActiveController {
             throw new Exception("Could not delete this item");
         }
     }
-    
+
     public function actionDeleteChannel() {
         $id = Yii::$app->request->getBodyParam('id');
         $channel = ProducerChannel::find()->where(['id' => $id])->one();
         $producer_id = $channel->producer_id;
 
         if ($channel->delete()) {
-            return $this->redirect(['producer/profile', 
-                'id' => $producer_id]);
+            return $this->redirect(['producer/profile',
+                        'id' => $producer_id]);
         } else {
             throw new Exception("Could not delete this item");
         }
     }
-    
+
     public function actionDeleteProducer() {
         $id = Yii::$app->request->getBodyParam('id');
         $producer = Producer::find()->where(['id' => $id])->one();
@@ -96,7 +98,22 @@ class RestController extends ActiveController {
     }
 
     public function actionSaveChannel() {
-        $property = Yii::$app->request->getBodyParam("property");
+        $form_properties = Yii::$app->request->getBodyParam("property");
+        $property_obj = new ProducerChannelProperty();
+
+        foreach ($form_properties as $form_property) {
+            if (!$property_obj->isValidType($form_property['type'])) {
+                throw new Exception("Invalid type value '" . $form_property['type'] . "'");
+            }
+        }
+
+        if (!$property_obj->isValidType($form_property['type'])) {
+            throw new Exception("Invalid type value '" . $form_property['type'] . "'");
+        }
+
+        $property_obj->property_name = $form_property['name'];
+        $property_obj->type = $form_property['type'];
+
         $producer_channel = new ProducerChannel();
         $id = Yii::$app->request->getBodyParam("id");
 
@@ -104,35 +121,25 @@ class RestController extends ActiveController {
             $producer_channel = ProducerChannel::findOne(['id' => $id]);
         }
 
-        $producer_id = Yii::$app->request->getBodyParam("producer_id");
-        $http_method = Yii::$app->request->getBodyParam("http_method");
-        $internet_address = Yii::$app->request->getBodyParam("internet_address");
-        
-        $name = Yii::$app->request->getBodyParam("name");
-        $http_response = $this->callHttp($internet_address);
-        $status = $http_response->getStatusCode();
+        $producer_channel->producer_id = Yii::$app->request->getBodyParam("producer_id");
+        $producer_channel->http_method = Yii::$app->request->getBodyParam("http_method");
+        $producer_channel->internet_address = Yii::$app->request->getBodyParam("internet_address");
+        $producer_channel->name = Yii::$app->request->getBodyParam("name");
 
-        if ($status < 200 || $status > 299) {
-            return $this->redirect(['producer/profile', 'id' => $producer_id, "error_message" => 'The URL used to create the channel was not valid']);
+        if (!$producer_channel->save()) {
+            throw new Exception("Could not save the ProducerChannel");
         }
 
-        $producer_channel->http_method = $http_method;
-        $producer_channel->internet_address = $internet_address;
-        $producer_channel->producer_id = $producer_id;
-        $producer_channel->name = $name;
+        $property_obj->channel_id = $producer_channel->id;
 
-        if (isset($id)) {
-            $producer_channel->update();
-            return $this->redirect(['producer/profile', 'id' => $producer_id]);
-        } else {
-            if ($producer_channel->save()) {
-                return $this->redirect(['producer/profile', 'id' => $producer_id]);
-            } else {
-                throw new Exception("Could not save this item");
-            }
+        if (!$property_obj->save()) {
+            throw new Exception("Could not save the ProducerChannelProperty");
         }
+
+        return $this->redirect(['producer/profile',
+                    'id' => $producer_channel->producer_id]);
     }
-    
+
     public function actionSaveProducer() {
         $producer = new Producer();
         $id = Yii::$app->request->getBodyParam("id");

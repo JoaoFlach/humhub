@@ -21,6 +21,8 @@ class ProducerChannelProperty extends \yii\db\ActiveRecord
     {
         return 'producer_channel_property';
     }
+    
+    private $allowed_types = ['Number', 'Text', 'Boolean'];
 
     /**
      * @inheritdoc
@@ -49,6 +51,10 @@ class ProducerChannelProperty extends \yii\db\ActiveRecord
         $channel = ProducerChannel::findOne(['id' => $this->channel_id]);
 
         return $channel;
+    }
+    
+    public function isValidType($type){
+        return in_array($type, $this->allowed_types);
     }
    
 }
