@@ -41,8 +41,8 @@ class ChannelController extends Controller {
     public function actionEdit($id) {
         $channel = ProducerChannel::findOne(['id' => $id]);
         $channel_properties = ProducerChannelProperty::findAll(['channel_id' => $id]);
-        return $this->renderAjax('edit', ['channel' => $channel, 
-            'channel_properties' => $channel_properties]);
+        return $this->renderAjax('edit', ['channel' => $channel,
+                    'channel_properties' => $channel_properties]);
     }
 
     public function actionDelete($id) {
@@ -65,6 +65,34 @@ class ChannelController extends Controller {
             $responsebody = \GuzzleHttp\json_decode($response->getBody());
         }
         return $this->renderAjax('request', ['producer_name' => $producer_name, 'content' => $responsebody]);
+    }
+
+    public function actionSelectItems() {
+        $out = [];
+        if (isset($_POST['origin'])) {
+            $parents = $_POST['origin'];
+            if ($parents != null) {
+                $producer_id = $parents[0];
+                $out = self::getChannelList($producer_id);
+// the getSubCatList function will query the database based on the
+// cat_id and return an array like below:
+// [
+// ['id'=>'<sub-cat-id-1>', 'name'=>'<sub-cat-name1>'],
+// ['id'=>'<sub-cat_id_2>', 'name'=>'<sub-cat-name2>']
+// ]
+                echo Json::encode(['output' => $out, 'selected' => '']);
+                return;
+            }
+        }
+        echo Json::encode(['output' => '', 'selected' => '']);
+    }
+    
+    public function getChannelList($producer_id) {
+        $channels = ProducerChannel::find()
+                ->where(['producer_id' => $producer_id])
+                ->select(["id", "name"])
+                ->asArray()
+                ->all();
     }
 
 }
