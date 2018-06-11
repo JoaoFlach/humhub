@@ -7,6 +7,7 @@ use humhub\modules\producer\components\Controller;
 use humhub\modules\producer\models\ProducerChannel;
 use humhub\modules\producer\models\ProducerChannelProperty;
 use \Zend\Http\Client;
+use yii\helpers\Json;
 use Yii;
 
 /**
@@ -69,17 +70,37 @@ class ChannelController extends Controller {
 
     public function actionSelectItems() {
         $out = [];
-        if (isset($_POST['origin'])) {
-            $parents = $_POST['origin'];
+        if (isset($_POST['depdrop_parents'])) {
+            $parents = $_POST['depdrop_parents'];
             if ($parents != null) {
                 $producer_id = $parents[0];
                 $out = self::getChannelList($producer_id);
-// the getSubCatList function will query the database based on the
-// cat_id and return an array like below:
-// [
-// ['id'=>'<sub-cat-id-1>', 'name'=>'<sub-cat-name1>'],
-// ['id'=>'<sub-cat_id_2>', 'name'=>'<sub-cat-name2>']
-// ]
+                // the getSubCatList function will query the database based on the
+                // cat_id and return an array like below:
+                // [
+                // ['id'=>'<sub-cat-id-1>', 'name'=>'<sub-cat-name1>'],
+                // ['id'=>'<sub-cat_id_2>', 'name'=>'<sub-cat-name2>']
+                // ]
+                echo Json::encode(['output' => $out, 'selected' => '']);
+                return;
+            }
+        }
+        echo Json::encode(['output' => '', 'selected' => '']);
+    }
+    
+    public function actionChannelProperties() {
+        $out = [];
+        if (isset($_POST['depdrop_parents'])) {
+            $parents = $_POST['depdrop_parents'];
+            if ($parents != null) {
+                $channel_id = $parents[0];
+                $out = self::getChannelProperties($channel_id);
+                // the getSubCatList function will query the database based on the
+                // cat_id and return an array like below:
+                // [
+                // ['id'=>'<sub-cat-id-1>', 'name'=>'<sub-cat-name1>'],
+                // ['id'=>'<sub-cat_id_2>', 'name'=>'<sub-cat-name2>']
+                // ]
                 echo Json::encode(['output' => $out, 'selected' => '']);
                 return;
             }
@@ -93,6 +114,16 @@ class ChannelController extends Controller {
                 ->select(["id", "name"])
                 ->asArray()
                 ->all();
+        return $channels;
+    }
+    
+    public function getChannelProperties($channel_id) {
+        $channel_properties = ProducerChannelProperty::find()
+                ->where(['channel_id' => $channel_id])
+                ->select(["id", "name" => "property_name"])
+                ->asArray()
+                ->all();
+        return $channel_properties;
     }
 
 }

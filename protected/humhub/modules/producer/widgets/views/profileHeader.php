@@ -171,7 +171,7 @@ if ($allowModifyProfileBanner || $allowModifyProfileImage) {
                                 <div class="pull-left entry">
                                     <span class="count"><?= $countConnectedThings; ?></span>
                                     <br>
-                                    <span class="title"><?= Yii::t('UserModule.widgets_views_profileHeader', 'Connected things'); ?></span>
+                                    <span class="title"><?= Yii::t('UserModule.widgets_views_profileHeader', 'Connections'); ?></span>
                                 </div>
                             </a>                            
                         <?php endif; ?>

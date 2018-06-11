@@ -8,6 +8,7 @@ use humhub\modules\producer\models\Producer;
 use humhub\modules\producer\models\ProducerChannel;
 use humhub\modules\producer\models\ProducerChannelProperty;
 use \Zend\Http\Client;
+use yii\helpers\Json;
 use Yii;
 
 /*
@@ -116,27 +117,26 @@ class RestController extends ActiveController {
 
         $form_properties = Yii::$app->request->getBodyParam("property");
 
-        $current_channel_properties = 
-                ProducerChannelProperty::findAll(
+        $current_channel_properties = ProducerChannelProperty::findAll(
                         ['channel_id' => $producer_channel->id]);
-        
+
         $ids_to_delete = array();
-        foreach ($current_channel_properties as $current_channel_property){
+        foreach ($current_channel_properties as $current_channel_property) {
             array_push($ids_to_delete, $current_channel_property->id);
         }
-        
+
         foreach ($form_properties as $form_property) {
             $property_id = $form_property['id'];
             $property_obj = new ProducerChannelProperty();
-            
-            if($property_id!==''){
+
+            if ($property_id !== '') {
                 $property_obj = ProducerChannelProperty::findOne(['id' => $property_id]);
-            } 
-            
+            }
+
             if (!$property_obj->isValidType($form_property['type'])) {
                 throw new Exception("Invalid type value '" . $form_property['type'] . "'");
             }
-            
+
             $property_obj->channel_id = $producer_channel->id;
             $property_obj->type = $form_property['type'];
             $property_obj->property_name = $form_property['name'];
@@ -146,7 +146,7 @@ class RestController extends ActiveController {
             }
             $ids_to_delete = array_diff($ids_to_delete, [$property_obj->id]);
         }
-        
+
         foreach ($ids_to_delete as $id_to_delete) {
             ProducerChannelProperty::deleteAll(['id' => $id_to_delete]);
         }
@@ -186,6 +186,13 @@ class RestController extends ActiveController {
             $producer->update();
             return $this->redirect(['producer/profile', 'id' => $id]);
         }
+    }
+    
+    public function actionSaveProducerConnection(){
+        $producer_connection = Yii::$app->request->getBodyParam('connection');
+        $out = $producer_connection;
+        echo Json::encode(['output' => $out, 'selected' => '']);
+        return;
     }
 
     public function actionUpdate($id) {
@@ -227,6 +234,10 @@ class RestController extends ActiveController {
         $date = gmdate($format);
 
         return $date;
+    }
+
+    public function actionTest() {
+        return "banana";
     }
 
 }

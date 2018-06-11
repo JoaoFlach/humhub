@@ -166,6 +166,7 @@ class ProducerController extends Controller {
     
     private function getConnectOriginSelectItems($producers) {
         $select_items = [];
+        $select_items[''] = '';
         foreach($producers as $producer) {
             $key = $producer->id;
             $value = $producer->name;
