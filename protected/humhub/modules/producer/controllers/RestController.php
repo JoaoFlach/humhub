@@ -7,6 +7,7 @@ use \yii\base\Exception;
 use humhub\modules\producer\models\Producer;
 use humhub\modules\producer\models\ProducerChannel;
 use humhub\modules\producer\models\ProducerChannelProperty;
+use humhub\modules\producer\models\ProducerConnection;
 use \Zend\Http\Client;
 use yii\helpers\Json;
 use Yii;
@@ -187,12 +188,30 @@ class RestController extends ActiveController {
             return $this->redirect(['producer/profile', 'id' => $id]);
         }
     }
-    
-    public function actionSaveProducerConnection(){
-        $producer_connection = Yii::$app->request->getBodyParam('connection');
-        $out = $producer_connection;
-        echo Json::encode(['output' => $out, 'selected' => '']);
-        return;
+
+    public function actionSaveProducerConnection() {
+        $producer_connection = new ProducerConnection();
+        $producer_connection_form = Yii::$app->request->getBodyParam('connection');
+//        $out = $producer_connection;
+//        echo Json::encode(['output' => $out, 'selected' => '']);
+
+        $currentDate = $this->getCurrentDate();
+
+        $producer_connection->producer_id = $producer_connection_form['producer_id'];
+        $producer_connection->origin_channel_id = $producer_connection_form['origin_channel_id'];
+        $producer_connection->when_property = $producer_connection_form['when_property'];
+        $producer_connection->condition_sign = $producer_connection_form['condition_sign'];
+        $producer_connection->condition_value = $producer_connection_form['condition_value'];
+        $producer_connection->created_at = $currentDate;
+        $producer_connection->updated_at = $currentDate;
+        $producer_connection->then_id = $producer_connection_form['then_id'];
+//        $producer_connection->post_content = $producer_connection_form['post_content'];
+//        $producer_connection->post_channel_id = $producer_connection_form['post_channel_id'];
+        $producer_connection->post_content = '';
+        $producer_connection->post_channel_id = 1;
+        $producer_connection->save();
+        return $this->redirect(['producer/profile', 'id' =>
+                    $producer_connection->producer_id]);
     }
 
     public function actionUpdate($id) {

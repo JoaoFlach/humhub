@@ -11,7 +11,8 @@ use humhub\modules\producer\widgets\ChannelMenu;
 ?>
 <div class="row">
     <div class="col-md-12">
-        <?= \humhub\modules\producer\widgets\ProfileHeader::widget(['producer' => $producer]); ?>
+        <?= \humhub\modules\producer\widgets\ProfileHeader::widget(
+                ['producer' => $producer, 'countConnections' => $countConnections]); ?>
     </div>
 </div>
 <div class="row">

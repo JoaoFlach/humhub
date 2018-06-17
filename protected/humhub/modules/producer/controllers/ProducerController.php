@@ -7,6 +7,7 @@ use humhub\modules\directory\components\UserPostsStreamAction;
 use humhub\modules\producer\components\Controller;
 use humhub\modules\producer\models\Producer;
 use humhub\modules\producer\models\ProducerChannel;
+use humhub\modules\producer\models\ProducerConnection;
 use yii\data\Pagination;
 use \Zend\Http\Client;
 use humhub\modules\user\models\fieldtype\CountrySelect;
@@ -139,8 +140,16 @@ class ProducerController extends Controller {
     public function actionProfile($id, $error_message = '') {
         $producer = Producer::find()->where(['id' => $id])->one();
         $channels = ProducerChannel::find()->where(['producer_id' => $id])->all();
+        
+        $countConnections = ProducerConnection::find()->all();
+        $countConnections = count($countConnections);
 
-        return $this->render('profile', ['producer' => $producer, 'channels' => $channels, 'error_message' => $error_message]);
+        return $this->render('profile', 
+                ['producer' => $producer, 
+                    'channels' => $channels, 
+                    'error_message' => $error_message,
+                    'countConnections' => $countConnections
+                    ]);
     }
     
     public function actionTest($channel_id, $producer_name){

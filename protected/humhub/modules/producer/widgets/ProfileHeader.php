@@ -29,6 +29,11 @@ class ProfileHeader extends \yii\base\Widget
      * @var Producer
      */
     public $producer;
+    
+    /**
+     * @var countConnections
+     */
+    public $countConnections;
 
     
     /**
@@ -44,15 +49,12 @@ class ProfileHeader extends \yii\base\Widget
      */
     public function run()
     {
-        //change when developed functionality to connect things
-        $countConnectedThings = 0;
-        
         return $this->render('profileHeader', array(
                     'producer' => $this->producer,
                     'isProfileOwner' => true,
                     'friendshipsEnabled' => false,
                     'followingEnabled' => true,
-                    'countConnectedThings' => $countConnectedThings,                    
+                    'countConnections' => $this->countConnections,                    
                     'allowModifyProfileImage' => false,
                     'allowModifyProfileBanner' => false,
         ));
