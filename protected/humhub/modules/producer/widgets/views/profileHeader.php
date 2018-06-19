@@ -167,9 +167,9 @@ if ($allowModifyProfileBanner || $allowModifyProfileImage) {
                     <div class="statistics pull-left">
 
                         <?php if ($followingEnabled): ?>
-                            <a href="<?= $producer->createUrl('/producer/profile/connected-to-list'); ?>" data-target="#globalModal">
+                            <a href="<?= $producer->createUrl('/producer/producer/connections', ['producer_id' => $producer->id]); ?>" data-target="#globalModal">
                                 <div class="pull-left entry">
-                                    <span class="count"><?= $countConnections; ?></span>
+                                    <span class="count"><?= count($connections); ?></span>
                                     <br>
                                     <span class="title"><?= Yii::t('ProducerModule.widgets_views_profileHeader', 'Connections'); ?></span>
                                 </div>

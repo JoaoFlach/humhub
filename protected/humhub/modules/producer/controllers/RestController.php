@@ -192,23 +192,29 @@ class RestController extends ActiveController {
     public function actionSaveProducerConnection() {
         $producer_connection = new ProducerConnection();
         $producer_connection_form = Yii::$app->request->getBodyParam('connection');
-//        $out = $producer_connection;
-//        echo Json::encode(['output' => $out, 'selected' => '']);
-
         $currentDate = $this->getCurrentDate();
+        
+        $id = $producer_connection_form['id'];
+        if(isset($id)){
+            $producer_connection = ProducerConnection::find()
+                    ->where(['id' => $id])
+                    ->one();
+        } else {
+            $producer_connection->created_at = $currentDate;
+        }
+        
+        
 
         $producer_connection->producer_id = $producer_connection_form['producer_id'];
+        $producer_connection->name = $producer_connection_form['name'];
         $producer_connection->origin_channel_id = $producer_connection_form['origin_channel_id'];
         $producer_connection->when_property = $producer_connection_form['when_property'];
         $producer_connection->condition_sign = $producer_connection_form['condition_sign'];
-        $producer_connection->condition_value = $producer_connection_form['condition_value'];
-        $producer_connection->created_at = $currentDate;
+        $producer_connection->condition_value = $producer_connection_form['condition_value'];        
         $producer_connection->updated_at = $currentDate;
         $producer_connection->then_id = $producer_connection_form['then_id'];
-//        $producer_connection->post_content = $producer_connection_form['post_content'];
-//        $producer_connection->post_channel_id = $producer_connection_form['post_channel_id'];
-        $producer_connection->post_content = '';
-        $producer_connection->post_channel_id = 1;
+        $producer_connection->post_content = $producer_connection_form['social_post_content'];
+        $producer_connection->post_channel_id = $producer_connection_form['post_channel_id'];
         $producer_connection->save();
         return $this->redirect(['producer/profile', 'id' =>
                     $producer_connection->producer_id]);

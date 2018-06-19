@@ -21,11 +21,19 @@ use \yii\helpers\Url;
         </div>
 
         <form id="connectForm" action="/humhub/producer/rest/save-producer-connection" method="post">
+            <?= Html::input('hidden', 'connection[id]', $connection->id) ?>
+            <?= Html::input('hidden', 'connection[producer_id]', $producer->id) ?>
             <div class="modal-body">
+                <div class="form-group">
+                    <label class="control-label">Name this connection</label>
+                    <?= Html::input('text', 'connection[name]', $connection->name, ['class' => 'form-control'])
+                    ?>
+                </div>
+
                 <div class="form-group">
                     <label class="control-label">Select an origin</label>
                     <?=
-                    Html::dropDownList('connection[producer_id]', '', $origin_select_items, ['class' => 'form-control',
+                    Html::dropDownList('connection[origin_producer_id]', $connection->producer_id, $origin_select_items, ['class' => 'form-control',
                         'id' => 'origin'])
                     ?>  
 
@@ -40,7 +48,8 @@ use \yii\helpers\Url;
                         'pluginOptions' => [
                             'depends' => ['origin'],
                             'placeholder' => 'Select a origin first',
-                            'url' => Url::to('/humhub/producer/channel/select-items', true)
+                            'url' => $producer->createUrl(
+                                    '/producer/channel/select-items', ['selected' => $connection->origin_channel_id])
                         ]
                     ])
                     ?>
@@ -80,10 +89,24 @@ use \yii\helpers\Url;
 
                 <div class="form-group">
                     <label class="control-label">Then</label>
-                    <select class="form-control" name="connection[then_id]">
-                        <option value="1">Make a post</option>
-                        <option value="2">Call POST channel</option>
+                    <select class="form-control" name="connection[then_id]" 
+                            onchange="changeSelectFieldThen(this.value);">
+                        <option value="1">Make a social post</option>
+                        <option value="2">Call an actuator channel</option>
                     </select>
+                </div>
+
+                <div class="form-group then_group" id="make_social_post_textarea">
+                    <label class="control-label">Social Post Content</label>
+                    <textarea class="form-control" name="connection[social_post_content]"></textarea>
+                </div>
+
+                <div class="form-group then_group" id="actuator_channel_configuration" hidden>
+                    <label class="control-label">Actuator channel configuration</label>
+                    <?=
+                    Html::dropDownList('connection[post_channel_id]', '', $channel_select_items, ['class' => 'form-control',
+                        'id' => 'origin'])
+                    ?>  
                 </div>
             </div>
 
@@ -99,3 +122,18 @@ use \yii\helpers\Url;
     </div>
 
 </div>
+<script type="text/javascript">
+    function changeSelectFieldThen(value) {
+        var then_group = $('.then_group');
+        then_group.hide();
+
+        if (value == 1) {
+            $('#make_social_post_textarea').show();
+        }
+
+        if (value == 2) {
+            $('#actuator_channel_configuration').show();
+        }
+    }
+
+</script>

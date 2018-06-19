@@ -68,40 +68,30 @@ class ChannelController extends Controller {
         return $this->renderAjax('request', ['producer_name' => $producer_name, 'content' => $responsebody]);
     }
 
-    public function actionSelectItems() {
+    public function actionSelectItems($selected = null) {
         $out = [];
+       
         if (isset($_POST['depdrop_parents'])) {
             $parents = $_POST['depdrop_parents'];
             if ($parents != null) {
                 $producer_id = $parents[0];
                 $out = self::getChannelList($producer_id);
-                // the getSubCatList function will query the database based on the
-                // cat_id and return an array like below:
-                // [
-                // ['id'=>'<sub-cat-id-1>', 'name'=>'<sub-cat-name1>'],
-                // ['id'=>'<sub-cat_id_2>', 'name'=>'<sub-cat-name2>']
-                // ]
-                echo Json::encode(['output' => $out, 'selected' => '']);
+                echo Json::encode(['output' => $out, 'selected' => $selected]);
                 return;
             }
         }
         echo Json::encode(['output' => '', 'selected' => '']);
     }
     
-    public function actionChannelProperties() {
+    public function actionChannelProperties($selected = null) {
         $out = [];
         if (isset($_POST['depdrop_parents'])) {
             $parents = $_POST['depdrop_parents'];
             if ($parents != null) {
                 $channel_id = $parents[0];
                 $out = self::getChannelProperties($channel_id);
-                // the getSubCatList function will query the database based on the
-                // cat_id and return an array like below:
-                // [
-                // ['id'=>'<sub-cat-id-1>', 'name'=>'<sub-cat-name1>'],
-                // ['id'=>'<sub-cat_id_2>', 'name'=>'<sub-cat-name2>']
-                // ]
-                echo Json::encode(['output' => $out, 'selected' => '']);
+               
+                echo Json::encode(['output' => $out, 'selected' => $selected]);
                 return;
             }
         }

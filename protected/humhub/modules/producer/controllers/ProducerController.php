@@ -66,12 +66,51 @@ class ProducerController extends Controller {
         return $this->renderAjax('addChannel', ['producer_id' => $id, 'error_status' => $error_status]);
     }
     
-    public function actionConnect($producer_id){
+    public function actionConnect($producer_id = null, $connection_id = null){
+        $connection = new ProducerConnection();
+        if($connection_id!=null){
+            $connection = ProducerConnection::find()
+                    ->where(['id' => $connection_id])
+                    ->one();
+            
+            $producer_id = $connection->producer_id;
+        }
+        
+        $producer = Producer::find()
+                ->where(['id' => $producer_id])
+                ->one();
+        
         $producers = Producer::find()->all();
-        $origin_select_items = $this->getConnectOriginSelectItems($producers);
+        
+        $channels = ProducerChannel::find()
+                ->where(['producer_id' => $producer_id])
+                ->all();
+        
+        $origin_select_items = $this->getSelectItems($producers);
+        $channel_select_items = $this->getSelectItems($channels);
+        
         return $this->renderAjax('connect', [
+            'connection' => $connection,
+            'producer' => $producer,
             'producers' => $producers,
-            'origin_select_items' => $origin_select_items
+            'channels' => $channels,
+            'origin_select_items' => $origin_select_items,
+            'channel_select_items' => $channel_select_items
+        ]);
+    }
+    
+    public function actionConnections($producer_id){
+        $producer = Producer::find()
+                ->where(['id' => $producer_id])
+                ->one();
+        
+        $connections = ProducerConnection::find()
+                ->where(['producer_id' => $producer_id])
+                ->all();
+                       
+        return $this->renderAjax('connections', [
+           'producer' => $producer,
+           'connections' => $connections
         ]);
     }
     
@@ -138,17 +177,23 @@ class ProducerController extends Controller {
     }
     
     public function actionProfile($id, $error_message = '') {
-        $producer = Producer::find()->where(['id' => $id])->one();
-        $channels = ProducerChannel::find()->where(['producer_id' => $id])->all();
+        $producer = Producer::find()
+                ->where(['id' => $id])
+                ->one();
         
-        $countConnections = ProducerConnection::find()->all();
-        $countConnections = count($countConnections);
-
+        $channels = ProducerChannel::find()
+                ->where(['producer_id' => $id])
+                ->all();
+        
+        $connections = ProducerConnection::find()
+                ->where(['producer_id' => $id])
+                ->all();
+        
         return $this->render('profile', 
                 ['producer' => $producer, 
                     'channels' => $channels, 
                     'error_message' => $error_message,
-                    'countConnections' => $countConnections
+                    'connections' => $connections
                     ]);
     }
     
@@ -179,6 +224,18 @@ class ProducerController extends Controller {
         foreach($producers as $producer) {
             $key = $producer->id;
             $value = $producer->name;
+            $select_items[$key] = $value;            
+        }
+        
+        return $select_items;
+    }
+    
+    private function getSelectItems($obj_list) {
+        $select_items = [];
+        $select_items[''] = '';
+        foreach($obj_list as $obj) {
+            $key = $obj->id;
+            $value = $obj->name;
             $select_items[$key] = $value;            
         }
         

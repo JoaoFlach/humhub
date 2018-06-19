@@ -12,7 +12,7 @@ use humhub\modules\producer\widgets\ChannelMenu;
 <div class="row">
     <div class="col-md-12">
         <?= \humhub\modules\producer\widgets\ProfileHeader::widget(
-                ['producer' => $producer, 'countConnections' => $countConnections]); ?>
+                ['producer' => $producer, 'connections' => $connections]); ?>
     </div>
 </div>
 <div class="row">

@@ -9,6 +9,7 @@ use humhub\modules\user\models\User;
  * This is the model class for table "producer".
 
  * @property integer $id
+ * @property string $name
  * @property integer $producer_id
  * @property integer $origin_channel_id
  * @property string $when_property
@@ -47,41 +48,5 @@ class ProducerConnection extends \yii\db\ActiveRecord
     {
         return [
         ];
-    }
-    
-    public function getUrl(){
-        return "/humhub/producer/profile/".$this->id;
-    }
-    
-    /**
-     * @return string
-     */
-    public function getProducerOwnerName()
-    {
-        $user = User::findOne(['id' => $this->user_id]);
-
-        if ($user !== null && $user->isActive()) {
-            return $user->getDisplayName();
-        }
-
-        return '';
-    }
-    
-    public function isProducerOwner($userId) {
-        return $this->user_id == $userId;
-    }
-    
-    public function createUrl($route = null, $params = [], $scheme = false)
-    {
-        if ($route === null) {
-            $route = '/producer/profile';
-        }
-
-        array_unshift($params, $route);
-        if (!isset($params['uguid'])) {
-            $params['uguid'] = $this->guid;
-        }
-
-        return \yii\helpers\Url::toRoute($params, $scheme);
     }
 }

@@ -31,9 +31,9 @@ class ProfileHeader extends \yii\base\Widget
     public $producer;
     
     /**
-     * @var countConnections
+     * @var $connections
      */
-    public $countConnections;
+    public $connections;
 
     
     /**
@@ -54,7 +54,7 @@ class ProfileHeader extends \yii\base\Widget
                     'isProfileOwner' => true,
                     'friendshipsEnabled' => false,
                     'followingEnabled' => true,
-                    'countConnections' => $this->countConnections,                    
+                    'connections' => $this->connections,                    
                     'allowModifyProfileImage' => false,
                     'allowModifyProfileBanner' => false,
         ));
