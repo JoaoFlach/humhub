@@ -12,7 +12,8 @@ use humhub\modules\user\models\User;
  * @property string $name
  * @property integer $producer_id
  * @property integer $origin_channel_id
- * @property string $when_property
+ * @property integer $origin_producer_id
+ * @property integer $when_property
  * @property string $condition_sign
  * @property string $condition_value
  * @property string $created_at
@@ -49,4 +50,22 @@ class ProducerConnection extends \yii\db\ActiveRecord
         return [
         ];
     }
+    
+    public function getConditionSignFormOptions() {
+        $form_options = [];
+        $form_options['1'] = 'is greater than';
+        $form_options['2'] = 'is less than';
+        $form_options['3'] = 'is equal to';
+        
+        return $form_options;
+    }
+    
+    public function getThenFormOptions() {
+        $form_options = [];
+        $form_options['1'] = 'Make a social post';
+        $form_options['2'] = 'Call this producer channel';
+        
+        return $form_options;
+    }
+    
 }

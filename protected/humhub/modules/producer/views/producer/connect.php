@@ -9,7 +9,8 @@ use yii\helpers\Html;
 use kartik\widgets\DepDrop;
 use \yii\helpers\Url;
 ?>
-<div class="modal-dialog">
+    
+<div class="modal-dialog" id="modal-window">
     <div class="modal-content">
 
         <div class="modal-header">
@@ -26,18 +27,20 @@ use \yii\helpers\Url;
             <div class="modal-body">
                 <div class="form-group">
                     <label class="control-label">Name this connection</label>
-                    <?= Html::input('text', 'connection[name]', $connection->name, ['class' => 'form-control'])
+                    <?= Html::input('text', 'connection[name]', $connection->name, 
+                            ['class' => 'form-control',
+                                ])
                     ?>
                 </div>
 
                 <div class="form-group">
                     <label class="control-label">Select an origin</label>
                     <?=
-                    Html::dropDownList('connection[origin_producer_id]', $connection->producer_id, $origin_select_items, ['class' => 'form-control',
-                        'id' => 'origin'])
-                    ?>  
-
-
+                    Html::dropDownList('connection[origin_producer_id]', 
+                            $connection->origin_producer_id, 
+                            $origin_select_items, 
+                            ['class' => 'form-control', 'id' => 'origin'])
+                    ?>
                 </div>
                 <div class="form-group">
                     <label class="control-label">Select a channel</label>
@@ -45,6 +48,7 @@ use \yii\helpers\Url;
                     DepDrop::widget([
                         'name' => 'connection[origin_channel_id]',
                         'options' => ["id" => "origin-channels"],
+                        'data' => [$origin_channel->id=>$origin_channel->name],
                         'pluginOptions' => [
                             'depends' => ['origin'],
                             'placeholder' => 'Select a origin first',
@@ -63,25 +67,32 @@ use \yii\helpers\Url;
                             DepDrop::widget([
                                 'name' => 'connection[when_property]',
                                 'options' => ["id" => "origin-channel-properties"],
+                                'data' => [$origin_channel_property->id=>$origin_channel_property->property_name],
                                 'pluginOptions' => [
                                     'depends' => ['origin-channels'],
                                     'placeholder' => 'Select a channel first',
-                                    'url' => Url::to('/humhub/producer/channel/channel-properties', true)
+                                    'url' => $producer->createUrl(
+                                            '/producer/channel/channel-properties', ['selected' => $connection->when_property]
+                                    )
                                 ]
                             ])
                             ?>
                         </div>
                         <div class="col-md-4 form-group">
                             <label>Condition</label>
-                            <select class="form-control" name="connection[condition_sign]" >
-                                <option value="1">is greater than</option>
-                                <option value="2">is less than</option>
-                                <option value="3">is equal to</option>
-                            </select>
+                            
+                            <?= Html::dropDownList('connection[condition_sign]', 
+                                    $connection->condition_sign, 
+                                    $connection->getConditionSignFormOptions(), 
+                                    ['class' => 'form-control', 'id' => 'origin'])
+                            ?>
                         </div>
                         <div class="col-md-4 form-group">
                             <label>Value</label>
-                            <input type="text" name="connection[condition_value]" class="form-control"/>
+                            <?= Html::input('text', 'connection[condition_value]', 
+                                    $connection->condition_value, 
+                                    ['class' => 'form-control'])
+                            ?>
                         </div>                            
                     </div>
 
@@ -89,23 +100,30 @@ use \yii\helpers\Url;
 
                 <div class="form-group">
                     <label class="control-label">Then</label>
-                    <select class="form-control" name="connection[then_id]" 
-                            onchange="changeSelectFieldThen(this.value);">
-                        <option value="1">Make a social post</option>
-                        <option value="2">Call an actuator channel</option>
-                    </select>
+                    <?= Html::dropDownList('connection[then_id]', 
+                                    $connection->then_id, 
+                                    $connection->getThenFormOptions(), 
+                                    ['class' => 'form-control', 
+                                        'id' => 'then',
+                                        'onchange'=>'changeSelectFieldThen(this.value);'])
+                            ?>
                 </div>
 
                 <div class="form-group then_group" id="make_social_post_textarea">
                     <label class="control-label">Social Post Content</label>
-                    <textarea class="form-control" name="connection[social_post_content]"></textarea>
+                    <?= Html::textarea('connection[social_post_content]',                             
+                                    $connection->post_content, 
+                                    ['class' => 'form-control'])
+                            ?>
                 </div>
 
                 <div class="form-group then_group" id="actuator_channel_configuration" hidden>
                     <label class="control-label">Actuator channel configuration</label>
                     <?=
-                    Html::dropDownList('connection[post_channel_id]', '', $channel_select_items, ['class' => 'form-control',
-                        'id' => 'origin'])
+                    Html::dropDownList('connection[post_channel_id]', 
+                            $connection->post_channel_id, $channel_select_items, 
+                            ['class' => 'form-control',
+                            'id' => 'origin'])
                     ?>  
                 </div>
             </div>
@@ -120,7 +138,6 @@ use \yii\helpers\Url;
         </form>
 
     </div>
-
 </div>
 <script type="text/javascript">
     function changeSelectFieldThen(value) {
@@ -135,5 +152,7 @@ use \yii\helpers\Url;
             $('#actuator_channel_configuration').show();
         }
     }
-
+    
+    var then = $('#then');
+    changeSelectFieldThen(then.val())
 </script>

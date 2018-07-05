@@ -57,6 +57,7 @@ class ChannelController extends Controller {
         $client = new Client();
         $client->setUri($url);
         $client->setHeaders(['Accept' => 'application/json']);
+        $client->setMethod($channel->http_method);
         $response = $client->send();
 
 

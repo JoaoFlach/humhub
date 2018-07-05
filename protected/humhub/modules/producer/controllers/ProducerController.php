@@ -8,10 +8,10 @@ use humhub\modules\producer\components\Controller;
 use humhub\modules\producer\models\Producer;
 use humhub\modules\producer\models\ProducerChannel;
 use humhub\modules\producer\models\ProducerConnection;
+use humhub\modules\producer\models\ProducerChannelProperty;
 use yii\data\Pagination;
 use \Zend\Http\Client;
 use humhub\modules\user\models\fieldtype\CountrySelect;
-
 
 use Yii;
 
@@ -68,12 +68,22 @@ class ProducerController extends Controller {
     
     public function actionConnect($producer_id = null, $connection_id = null){
         $connection = new ProducerConnection();
+        $origin_channel = new ProducerChannel();
+        $origin_channel_property = new ProducerChannelProperty();
         if($connection_id!=null){
             $connection = ProducerConnection::find()
                     ->where(['id' => $connection_id])
                     ->one();
             
             $producer_id = $connection->producer_id;
+            
+            $origin_channel = ProducerChannel::find()
+                ->where(['id' => $connection->origin_channel_id])
+                ->one();
+            
+            $origin_channel_property = ProducerChannelProperty::find()
+                ->where(['id' => $connection->when_property])
+                ->one();
         }
         
         $producer = Producer::find()
@@ -95,7 +105,9 @@ class ProducerController extends Controller {
             'producers' => $producers,
             'channels' => $channels,
             'origin_select_items' => $origin_select_items,
-            'channel_select_items' => $channel_select_items
+            'channel_select_items' => $channel_select_items,
+            'origin_channel' => $origin_channel,
+            'origin_channel_property' => $origin_channel_property
         ]);
     }
     
